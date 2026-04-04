@@ -35,4 +35,8 @@ public class MainPage {
     public Cart cart() {
         return new Cart();
     }
+
+    public OrderPayment orderPayment() {
+        return new OrderPayment();
+    }
 }
