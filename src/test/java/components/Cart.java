@@ -19,8 +19,18 @@ public class Cart {
         shopCartHeader.shouldBe(Condition.visible).getText().trim().equals("Корзина");
     }
 
-    public void purchaseOrder() {
+    public OrderPayment orderPayment() {
+        return new OrderPayment();
+    }
+
+    public OrderPayment purchaseOrder() {
 //        itemName.getText().equals(Tickets.getTicketName(0));
         buyOrderButton.click();
+
+        return new OrderPayment();
+    }
+
+    public Message message() {
+        return new Message();
     }
 }

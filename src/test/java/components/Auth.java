@@ -7,7 +7,7 @@ import org.openqa.selenium.By;
 import static com.codeborne.selenide.Selenide.$;
 
 public class Auth {
-    SelenideElement authModalInput = $(By.xpath("//input[@class='p-inputtext p-component auth-input']"));
+    static SelenideElement authModalInput = $(By.xpath("//input[@class='p-inputtext p-component auth-input']"));
     static SelenideElement authModalButton = $(By.xpath("//div[@class='confirm-button-container']//button"));
     SelenideElement authIconContainer = $(By.xpath("//div[@class='icon-container']"));
     SelenideElement authButton = $(By.xpath("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']"));
@@ -21,12 +21,14 @@ public class Auth {
         authIconContainer.shouldBe(Condition.visible, Condition.enabled);
     }
 
-    public void authWithCardUid(String cardUid) {
+    public Tickets authWithCardUid(String cardUid) {
         authButton.click();
         authModalInput.sendKeys(cardUid);
         authModalButton.click();
 
         authButton.getText().equals(cardUid.trim());
+
+        return new Tickets();
     }
 
     public static void clickModalAuthButton() {
@@ -44,5 +46,9 @@ public class Auth {
         authModalButton.click();
 
         return new Cart();
+    }
+
+    public Tickets tickets() {
+        return new Tickets();
     }
 }

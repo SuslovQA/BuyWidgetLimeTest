@@ -17,4 +17,8 @@ public class OrderPayment {
         inputCardUid.shouldBe(Condition.disabled);
     }
 
+    public void some() {
+        System.out.println("some");
+    }
+
 }

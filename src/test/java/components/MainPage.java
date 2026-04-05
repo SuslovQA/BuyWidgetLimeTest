@@ -2,6 +2,7 @@ package components;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import data.AuthData;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -39,4 +40,6 @@ public class MainPage {
     public OrderPayment orderPayment() {
         return new OrderPayment();
     }
+
+    public Message message() { return new Message();}
 }
