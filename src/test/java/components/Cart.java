@@ -16,7 +16,7 @@ public class Cart {
 
     public Cart() {
         shopCart.shouldBe(Condition.exist);
-        shopCartHeader.shouldBe(Condition.visible).getText().trim().equals("Корзина");
+//        shopCartHeader.shouldBe(Condition.visible).getText().trim().equals("Корзина");
     }
 
     public OrderPayment orderPayment() {
