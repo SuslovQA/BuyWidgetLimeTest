@@ -12,6 +12,7 @@ public class MainPage {
     public final Auth auth;
     public final Tickets tickets;
     public final Cart cart;
+    public final OrderPayment orderPayment;
 
     SelenideElement logo = $(By.tagName("lime-logo"));
     SelenideElement ticketsHeader = $$(By.tagName("h2")).get(0);
@@ -24,6 +25,7 @@ public class MainPage {
         this.auth = new Auth();
         this.tickets = new Tickets();
         this.cart = new Cart();
+        this.orderPayment = new OrderPayment();
     }
 
 //        logo.shouldBe(Condition.exist);
