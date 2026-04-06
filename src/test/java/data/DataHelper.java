@@ -6,15 +6,8 @@ import com.codeborne.selenide.impl.CollectionElement;
 import components.Tickets;
 import org.openqa.selenium.By;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.*;
 
 public class DataHelper {
-    static ElementsCollection ticketsInCategory = $$(By.xpath("//button[@class='sign-button ng-star-inserted']"));
-
-
-    public static void addFirstTicketFromCategory() {
-        $(By.xpath("//lime-card//button")).click();
-             ticketsInCategory.get(0).click();
-    }
+    public static SelenideElement virtualProcessing = $x("//div[contains(text(), ' Онлайн виртуальный ')]/parent::lime-processing-icon/parent::button");
 }
