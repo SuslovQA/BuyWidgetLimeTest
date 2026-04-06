@@ -4,55 +4,47 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import org.openqa.selenium.By;
 
-import java.time.Duration;
-
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class Tickets {
     static ElementsCollection card = $$(By.xpath("//lime-card//button"));
     static ElementsCollection ticketsName = $$(By.xpath("//div[@class='name-string']"));
-    static ElementsCollection ticketsInCategory = $$(By.xpath("//button[@class='sign-button ng-star-inserted']"));
+    static ElementsCollection ticketsInCategory = $$(By.xpath("//button[@class='sign-button ng-star-inserted'][2]"));
 
-    public Tickets() {
-    }
-
-    public Cart addTicket(int index) {
+    public Tickets addTicket(int index) {
         card.get(index).click();
 
-        if (Auth.authModalButton.is(Condition.visible)) {
-            Auth.clickModalAuthButton();
+        if (Auth.authModalConfirmButton.is(Condition.visible)) {
+            Auth.authModalConfirmButton.click();
         }
-        return new Cart();
+
+        return this;
     }
 
-    public Cart addTicketsWithAuthWithEmail(int index, String email) {
+    public Tickets addTicketsWithAuthWithEmail(int index, String email) {
         card.get(index).click();
 
-        if (Auth.authModalButton.is(Condition.visible)) {
+        if (Auth.authModalConfirmButton.is(Condition.visible)) {
             Auth.authModalInput.sendKeys(email);
-            Auth.authModalButton.click();
+            Auth.authModalConfirmButton.click();
         }
-        return new Cart();
+        return this;
     }
 
     public static String getTicketName(int index) {
         return ticketsName.get(index).getText();
     }
 
-    public Cart cart() {
-        return new Cart();
-    }
 
-    public Cart addFirstTicketFromCategory() {
-        card.get(1).click();
-
-        if (Auth.authModalButton.is(Condition.exist)) {
-            Auth.authModalButton.click();
-        }
-
+    public Tickets addFirstTicketFromCategory() {
+        card.get(0).click();
         ticketsInCategory.get(0).click();
 
-        return new Cart();
+        if (Auth.authModalConfirmButton.is(Condition.visible)) {
+            Auth.authModalConfirmButton.click();
+        }
+
+        return this;
     }
 }

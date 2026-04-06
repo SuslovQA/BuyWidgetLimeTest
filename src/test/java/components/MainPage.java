@@ -9,6 +9,10 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class MainPage {
+    public final Auth auth;
+    public final Tickets tickets;
+    public final Cart cart;
+
     SelenideElement logo = $(By.tagName("lime-logo"));
     SelenideElement ticketsHeader = $$(By.tagName("h2")).get(0);
     SelenideElement eventsHeader = $$(By.tagName("h2")).get(1);
@@ -17,29 +21,15 @@ public class MainPage {
     SelenideElement refillTitle = $(By.className("refill-title"));
 
     public MainPage() {
-        logo.shouldBe(Condition.exist);
-        ticketsHeader.getText().equals("Выбрать билеты111");
-        eventsHeader.getText().equals("Выбрать событие");
-        accountHeader.getText().equals("Счет");
-        refillSubtitle.getText().equals("Выберите сумму пополнения");
-        refillTitle.getText().equals("Введите сумму пополнения");
+        this.auth = new Auth();
+        this.tickets = new Tickets();
+        this.cart = new Cart();
     }
 
-    public Tickets tickets() {
-        return new Tickets();
-    }
-
-    public Auth auth() {
-        return new Auth();
-    }
-
-    public Cart cart() {
-        return new Cart();
-    }
-
-    public OrderPayment orderPayment() {
-        return new OrderPayment();
-    }
-
-    public Message message() { return new Message();}
+//        logo.shouldBe(Condition.exist);
+//        ticketsHeader.getText().equals("Выбрать билеты111");
+//        eventsHeader.getText().equals("Выбрать событие");
+//        accountHeader.getText().equals("Счет");
+//        refillSubtitle.getText().equals("Выберите сумму пополнения");
+//        refillTitle.getText().equals("Введите сумму пополнения");
 }

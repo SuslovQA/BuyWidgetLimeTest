@@ -11,34 +11,17 @@ import static com.codeborne.selenide.Selenide.$x;
 public class Cart {
     SelenideElement shopCart = $(By.className("shop-cart"));
     SelenideElement shopCartHeader = $x("//div[@class='cart-head']/h4");
-    SelenideElement itemName = $x("div[class='item-name']");
+    SelenideElement itemName = $x("//div[@class='item-name']");
     SelenideElement buyOrderButton = $x("//p-button[@class='make-order-button']/button");
-
-    public Cart() {
-        shopCart.shouldBe(Condition.exist);
-//        shopCartHeader.shouldBe(Condition.visible).getText().trim().equals("Корзина");
-    }
-
-    public OrderPayment orderPayment() {
-        return new OrderPayment();
-    }
-
-    public OrderPayment purchaseOrder() {
-//        itemName.getText().equals(Tickets.getTicketName(0));
-        buyOrderButton.click();
-
-        return new OrderPayment();
-    }
-
-    public Message message() {
-        return new Message();
-    }
 
     public String getItemNameInCart() {
         return itemName.getText();
     }
 
-    public Tickets tickets() {
-        return new Tickets();
-    }
+    // remove ticket
+    // remove all tickets
+    // + ticket in cart
+    // - ticket in cart
+    //        shopCart.shouldBe(Condition.exist);
+    //        shopCartHeader.shouldBe(Condition.visible).getText().trim().equals("Корзина");
 }
