@@ -33,4 +33,12 @@ public class Cart {
     public Message message() {
         return new Message();
     }
+
+    public String getItemNameInCart() {
+        return itemName.getText();
+    }
+
+    public Tickets tickets() {
+        return new Tickets();
+    }
 }

@@ -18,7 +18,7 @@ public class MainPage {
 
     public MainPage() {
         logo.shouldBe(Condition.exist);
-        ticketsHeader.getText().equals("Выбрать билеты");
+        ticketsHeader.getText().equals("Выбрать билеты111");
         eventsHeader.getText().equals("Выбрать событие");
         accountHeader.getText().equals("Счет");
         refillSubtitle.getText().equals("Выберите сумму пополнения");
