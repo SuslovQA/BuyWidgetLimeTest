@@ -19,11 +19,6 @@ public class OrderPayment {
     public static SelenideElement virtualProcessing = $x("//div[contains(text(), ' Онлайн виртуальный ')]/parent::lime-processing-icon/parent::button");
     public static SelenideElement onlineProcessing = $x("//div[contains(text(), ' Оплата картой ')]/parent::lime-processing-icon/parent::button");
 
-    public OrderPayment() {
-        orderPaymentHeader.getText().equals("Введите данные для получения заказа");
-        cartHeader.shouldBe(Condition.text("Корзина"));
-    }
-
     public void clickCheckboxAgreements() {
         checkboxAgreements.click();
     }
@@ -43,4 +38,7 @@ public class OrderPayment {
     public void clickOnlineProcessingButton() {
         onlineProcessing.click();
     }
+
+    //        orderPaymentHeader.getText().equals("Введите данные для получения заказа");
+//        cartHeader.shouldBe(Condition.text("Корзина"));
 }

@@ -1,16 +1,21 @@
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
 import data.AuthData;
+import data.DataHelper;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import components.MainPage;
+
+import java.util.Arrays;
 
 import static com.codeborne.selenide.Selenide.*;
 
 public class BuyWidgetTest {
     MainPage mainPage;
+
+    DataHelper.Ticket ticket1 = new DataHelper.Ticket(1, "Аквапарк", 150);
+    DataHelper.Ticket ticket2 = new DataHelper.Ticket(2, "Хамам", 11);
+    DataHelper.Ticket ticket3 = new DataHelper.Ticket(3, "Бани", 1000);
 
     @BeforeEach
     void setUp() {
@@ -19,24 +24,22 @@ public class BuyWidgetTest {
         Configuration.browser = "chrome";
         Configuration.browserSize = "1920x1080";
         Configuration.headless = false;
+        Configuration.pageLoadTimeout = 30_000;
         Configuration.pageLoadStrategy = "eager";
 
         mainPage = open("https://limepay.chudin.ru/buy/#/4501", MainPage.class);
+    }
 
-//        Thread.sleep(15_000);
+    @AfterEach
+    void tearDown() {
+        Selenide.closeWebDriver();
     }
 
     @Test
-    @DisplayName("1.0 Авторизация по UID и добавление билета в корзину")
+    @DisplayName("1.0 Успешное добавление одного билета в корзину с авторизацией по UID")
     void shouldAuthWithUidAndAddTicketInCart() {
-//        mainPage.auth().authWithCardUid(AuthData.Cards.getCardUid());
-//        mainPage.tickets().addTicket(1);
-//        mainPage.cart().purchaseOrder();
-//        mainPage.orderPayment();
-//        mainPage.auth.authWithCardUid(AuthData.Cards.getCardUid());
-
         mainPage.auth.authWithCardUid(AuthData.Cards.getCardUid());
-        mainPage.tickets.addTicket(1);
+        mainPage.tickets.addTicketWithClickOnAuthConfirm(ticket1.getIndex());
 
         var actual = mainPage.cart.getItemNameInCart();
         var expected = "Аквапарк";
@@ -45,7 +48,7 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("1.1 Афторизация по UID и добавление одного билета из категории билетов")
+    @DisplayName("1.1 Успешное добавление одного билета из категории билетов с авторизацией по UID")
     void shouldAuthWithUidAndAddTicketFromGroup() {
         mainPage.auth.authWithCardUid(AuthData.Cards.getCardUid());
         mainPage.tickets.addFirstTicketFromCategory();
@@ -56,35 +59,59 @@ public class BuyWidgetTest {
         Assertions.assertEquals(expected, actual);
     }
 
-//    @Test
-//    @DisplayName("1.2")
-//    void shouldError() {
-//        var expected = mainPage.auth()
-//                .tickets().addTicket(1)
-//                .message().getErrorMessage();
-//        var actual = "Заполните код карты";
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
+    @Test
+    @DisplayName("1.2 Отображение сообщения 'Товар добавлен в корзину' при успешном добавлении билета в корзину со скролом и авторизацией по UID")
+    void shouldDisplaySuccessMessageAddTicketToCart() {
+        mainPage.auth.authWithCardUid(AuthData.Cards.getCardUid());
 
-//    @Test
-//    @DisplayName("1.3")
-//    void shouldDisplaySuccessMessageAddTicketToCart() {
-//        var expected = mainPage.auth().authWithCardUid(AuthData.Cards.getCardUid())
-//                .addTicket(1)
-//                .message().getSuccessAddToCartMessage();
-//        var actual = "Товар добавлен в корзину";
-//
-//        Assertions.assertEquals(expected, actual);
-//    }
+        var actual = mainPage.tickets.clickEnabledNavButtonInSwiper()
+                .addTicketWithClickOnAuthConfirm(ticket3.getIndex())
+                .getSuccessAddToCartMessage();
+        var expected = "Товар добавлен в корзину";
 
-//    @Test
-//    @DisplayName("1.4")
-//    void should() {
-//        System.out.println(mainPage.auth().authWithCardUid(AuthData.Cards.getCardUid())
-//                .addTicket(1)
-//                .cart().getItemNameInCart());
-//
-//
-//    }
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("1.3 Успешное добавление двух одинаковых билетов в корзину с авторизацией по UID")
+    void shouldAddTwoEqualsTicketsToCart() {
+        mainPage.auth.authWithCardUid(AuthData.Cards.getCardUid());
+        mainPage.tickets.addSomeEqualsTickets(ticket2.getIndex(), 2);
+
+        var actual = mainPage.cart.getItemAmountInCart(0);
+        var expected = 2;
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("1.4 Успешное добавление трех разных билетов в корзину с авторизацией по UID")
+    void shouldAddSomeDifferentTicketsToCart() throws InterruptedException {
+        mainPage.auth.authWithCardUid(AuthData.Cards.getCardUid());
+        mainPage.tickets.addTicketWithClickOnAuthConfirm(ticket1.getIndex())
+                .addTicket(ticket2.getIndex())
+                .clickEnabledNavButtonInSwiper()
+                .addTicket(ticket3.getIndex());
+
+        Thread.sleep(1000);
+
+        var actual = mainPage.cart.getListOfItemsNamesInCart();
+
+        Assertions.assertTrue(actual.contains(ticket1.getName()));
+        Assertions.assertTrue(actual.contains(ticket2.getName()));
+        Assertions.assertTrue(actual.contains(ticket3.getName()));
+
+
+    }
+
+    @Test
+    @DisplayName("2.2 Отображение ошибки 'Заполните код карты' при попытке добавления билета и отправке пустой вормы авторизации")
+    void shouldDisplayErrorBeforeAddingTicketInCartWithEmptyAuthField() {
+        mainPage.tickets.addTicket(2);
+
+        var actual = mainPage.auth.clickConfirmAuthButtonInModal().getErrorMessageEmptyAuthField();
+        var expected = "Заполните код карты";
+
+        Assertions.assertEquals(expected, actual);
+    }
 }

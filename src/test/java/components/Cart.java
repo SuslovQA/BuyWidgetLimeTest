@@ -1,21 +1,37 @@
 package components;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.FindBy;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$x;
+import java.time.Duration;
+import java.util.List;
+
+import static com.codeborne.selenide.Selenide.*;
 
 public class Cart {
     SelenideElement shopCart = $(By.className("shop-cart"));
     SelenideElement shopCartHeader = $x("//div[@class='cart-head']/h4");
-    SelenideElement itemName = $x("//div[@class='item-name']");
+    ElementsCollection itemsName = $$x("//div[@class='item-name']");
     SelenideElement buyOrderButton = $x("//p-button[@class='make-order-button']/button");
+    ElementsCollection itemsAmount = $$x("//div[@class='items-amount']");
 
     public String getItemNameInCart() {
-        return itemName.getText();
+        return itemsName.get(0).getText();
+    }
+
+    public List<String> getListOfItemsNamesInCart() {
+        return itemsName.texts();
+    }
+
+    public int getItemAmountInCart(int index) {
+        return Integer.parseInt(itemsAmount.get(index).getText());
+    }
+
+    public String searchTicketInCartByIndex(int index) {
+        return itemsName.get(index).getText();
+
     }
 
     // remove ticket
