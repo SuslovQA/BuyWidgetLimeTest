@@ -6,7 +6,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import components.MainPage;
 
-import java.util.Arrays;
 
 import static com.codeborne.selenide.Selenide.*;
 
@@ -16,6 +15,9 @@ public class BuyWidgetTest {
     DataHelper.Ticket ticket1 = new DataHelper.Ticket(1, "Аквапарк", 150);
     DataHelper.Ticket ticket2 = new DataHelper.Ticket(2, "Хамам", 11);
     DataHelper.Ticket ticket3 = new DataHelper.Ticket(3, "Бани", 1000);
+    DataHelper.Ticket ticketFromCategory1 = new DataHelper.Ticket(0, "Билет 1", 10.22);
+    DataHelper.Ticket getTicketFromCategory2 = new DataHelper.Ticket(2, "Билет 2", 100);
+    DataHelper.Ticket getGetTicketFromCategory3 = new DataHelper.Ticket(3, "Билет 3", 100);
 
     @BeforeEach
     void setUp() {
@@ -49,9 +51,11 @@ public class BuyWidgetTest {
 
     @Test
     @DisplayName("1.1 Успешное добавление одного билета из категории билетов с авторизацией по UID")
-    void shouldAuthWithUidAndAddTicketFromGroup() {
+    void shouldAuthWithUidAndAddTicketFromGroup() throws InterruptedException {
         mainPage.auth.authWithCardUid(AuthData.Cards.getCardUid());
         mainPage.tickets.addFirstTicketFromCategory();
+
+        Thread.sleep(2000);
 
         var actual = mainPage.cart.getItemNameInCart();
         var expected = "Билет 1";
@@ -105,7 +109,24 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("2.2 Отображение ошибки 'Заполните код карты' при попытке добавления билета и отправке пустой вормы авторизации")
+    @DisplayName("1.5 Успешная покупка билета виртуальным процессингом")
+    void shouldBuyTicketByVirtualProcessing() {
+        mainPage.auth.authWithCardUid(AuthData.Cards.getCardUid());
+        mainPage.tickets.addTicketFromCategory(0);
+        mainPage.tickets.addTicketFromCategory(1);
+        mainPage.tickets.addTicketFromCategory(2);
+        mainPage.cart.makeOrder();
+        mainPage.orderPayment.clickVirtualProcessingButton();
+        mainPage.orderPayment.returnToTheShopFromVirtualPayment();
+
+        var actual = mainPage.orderPayment.getSuccessPaymentModalHeader();
+        var expected = "Оплата прошла успешно!";
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("2.1 Отображение ошибки 'Заполните код карты' при попытке добавления билета и отправке пустой формы авторизации")
     void shouldDisplayErrorBeforeAddingTicketInCartWithEmptyAuthField() {
         mainPage.tickets.addTicket(2);
 

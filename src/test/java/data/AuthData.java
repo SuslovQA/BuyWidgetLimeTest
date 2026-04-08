@@ -3,6 +3,7 @@ package data;
 public class AuthData {
     public static class Cards {
         private static String cardUid = "FAFEC877";
+        private static String invalidCardUid = "FAFEC888";
 
         public Cards(String cardUid) {
             this.cardUid = cardUid;

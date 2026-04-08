@@ -1,9 +1,9 @@
 package components;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
+
 
 import java.time.Duration;
 
@@ -12,19 +12,16 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class Tickets {
     ElementsCollection addTicketButton = $$(By.xpath("//lime-card//button"));
-    ElementsCollection ticketsName = $$(By.xpath("//div[@class='name-string']"));
-    ElementsCollection ticketsInCategory = $$(By.xpath("//button[@class='sign-button ng-star-inserted'][2]"));
+    ElementsCollection ticketsAndCategoryName = $$(By.xpath("//div[@class='name-string']"));
+    ElementsCollection addTicketsFromCategoryPlusButton = $$(By.xpath("//p-card[@class='good-type-list']//button[@class='sign-button ng-star-inserted'][2]"));
     SelenideElement successAddToCart = $x("//div[@class='message-block ng-star-inserted']//div[@class='description ng-star-inserted']");
     SelenideElement enabledNavButtonInSwiper = $x("//span[@class='nav-button']");
     SelenideElement allTicketsButton = $(By.xpath("//span[contains(text(), 'Все билеты')]/parent::button"));
+    SelenideElement goodTypeTicketItem = $x("//div[@class='good-type-list-item ng-star-inserted']");
 
     public Tickets addTicketWithClickOnAuthConfirm(int index) {
         addTicketButton.get(index).click();
-
-            if (Auth.authModalConfirmButton.isDisplayed()) {
-                Auth.authModalConfirmButton.click();
-            }
-
+        Auth.authModalConfirmButton.shouldBe(visible, Duration.ofSeconds(2)).click();
 
         return this;
     }
@@ -36,16 +33,22 @@ public class Tickets {
     }
 
     public void addSomeEqualsTickets(int index, int countEqualsTickets) {
-        for (int i = 0; i < countEqualsTickets; i++) {
-            addTicketWithClickOnAuthConfirm(index);
+        addTicketButton.get(index).click();
+
+            if (Auth.authModalConfirmButton.exists()) {
+                Auth.authModalConfirmButton.click();
+            }
+
+        for (int i = 0; i < countEqualsTickets - 1; i++) {
+            addTicketButton.get(index).click();
         }
 
     }
 
-    public Tickets addTicketsWithAuthWithEmail(int index, String email) {
+    public Tickets addTicketsWithAuthWOnEmail(int index, String email) {
         addTicketButton.get(index).click();
 
-        if (Auth.authModalConfirmButton.is(visible)) {
+        if (Auth.authModalConfirmButton.exists()) {
             Auth.authModalInput.sendKeys(email);
             Auth.authModalConfirmButton.click();
         }
@@ -53,15 +56,27 @@ public class Tickets {
     }
 
     public String getTicketNameByIndex(int index) {
-        return ticketsName.get(index).getText();
+        return ticketsAndCategoryName.get(index).getText();
     }
 
 
     public void addFirstTicketFromCategory() {
         addTicketButton.get(0).click();
-        ticketsInCategory.get(0).click();
+        addTicketsFromCategoryPlusButton.get(0).click();
 
-        if (Auth.authModalConfirmButton.is(visible)) {
+        if (Auth.authModalConfirmButton.exists()) {
+            Auth.authModalConfirmButton.click();
+        }
+    }
+
+    public void addTicketFromCategory(int index) {
+        if (!goodTypeTicketItem.exists()) {
+            addTicketButton.get(0).click();
+        }
+
+        addTicketsFromCategoryPlusButton.get(index).click();
+
+        if (Auth.authModalConfirmButton.exists()) {
             Auth.authModalConfirmButton.click();
         }
     }
