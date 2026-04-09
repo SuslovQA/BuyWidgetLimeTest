@@ -2,35 +2,41 @@ package data;
 
 public class AuthData {
     public static class Cards {
-        private static String cardUid = "FAFEC877";
+        private static String validCardUid = "FAFEC877";
         private static String invalidCardUid = "FAFEC888";
+        private static String validCardUidWithBalance = "FD12A1A1";
+        private static String validCardUidWithZeroBalance = "FD12A1A2";
 
-        public Cards(String cardUid) {
-            this.cardUid = cardUid;
+        public static String getValidCardUid() {
+            return validCardUid;
         }
 
-        public static String getCardUid() {
-            return cardUid;
+        public static String getValidCardUidWithBalance() {
+            return validCardUidWithBalance;
         }
 
-        public void setCardUid(String cardUid) {
-            this.cardUid = cardUid;
+        public static String getValidCardUidWithZeroBalanceBalance() {
+            return validCardUidWithZeroBalance;
+        }
+
+        public static String getInvalidCardUid() {
+            return invalidCardUid;
         }
     }
 
     public static class Emails {
-        private static String email = "see@lime-it.ru";
+        private static String validEmail = "see@lime-it.ru";
 
-        public Emails(String email) {
-            this.email = email;
+        public Emails(String validEmail) {
+            this.validEmail = validEmail;
         }
 
-        public static String getEmail() {
-            return email;
+        public static String getValidEmail() {
+            return validEmail;
         }
 
         public void setEmail(String email) {
-            this.email = email;
+            this.validEmail = email;
         }
     }
 }

@@ -1,8 +1,6 @@
 package components;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import data.AuthData;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -13,6 +11,7 @@ public class MainPage {
     public final Tickets tickets;
     public final Cart cart;
     public final OrderPayment orderPayment;
+    public final RefillAccount refillAccount;
 
     SelenideElement logo = $(By.tagName("lime-logo"));
     SelenideElement ticketsHeader = $$(By.tagName("h2")).get(0);
@@ -26,10 +25,11 @@ public class MainPage {
         this.tickets = new Tickets();
         this.cart = new Cart();
         this.orderPayment = new OrderPayment();
+        this.refillAccount = new RefillAccount();
     }
 
 //        logo.shouldBe(Condition.exist);
-//        ticketsHeader.getText().equals("Выбрать билеты111");
+//        ticketsHeader.getText().equals("Выбрать билеты");
 //        eventsHeader.getText().equals("Выбрать событие");
 //        accountHeader.getText().equals("Счет");
 //        refillSubtitle.getText().equals("Выберите сумму пополнения");
