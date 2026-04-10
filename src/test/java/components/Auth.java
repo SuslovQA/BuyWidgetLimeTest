@@ -11,6 +11,7 @@ public class Auth {
     static SelenideElement authModalConfirmButton = $(By.xpath("//div[@class='confirm-button-container']//button"));
     SelenideElement authIconContainer = $(By.xpath("//div[@class='icon-container']"));
     SelenideElement authButton = $(By.xpath("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']"));
+    SelenideElement errorMessageHeader = $x("//div[@class='head ng-star-inserted']");
     SelenideElement errorMessageEmptyAuthField = $(By.xpath("//div[@class='message-body']//div[@class='description ng-star-inserted']"));
     SelenideElement errorMessageWithInvalidAuthData = $(By.xpath("//div[@class='message-body']//div[@class='description ng-star-inserted']"));
     SelenideElement accountBalanceHeader = $x("//div[@class='account-balance']/h4");
@@ -52,6 +53,10 @@ public class Auth {
 
     public String getErrorMessageWithInvalidAuthData() {
         return errorMessageWithInvalidAuthData.shouldBe(Condition.visible).getText();
+    }
+
+    public String getErrorMessageHeader() {
+        return errorMessageHeader.shouldBe(Condition.visible).getText();
     }
 
     public String getValueInAuthButton() {

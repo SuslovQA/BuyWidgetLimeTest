@@ -45,6 +45,12 @@ public class BuyWidgetTest {
     }
 
     @Test
+    @DisplayName("0.1 Проверка созданных элементов на странице (лого, билеты, события, счета)")
+    void shouldCheckExistingElementsInMainPage() {
+        mainPage.checkElementsInMainPage();
+    }
+
+    @Test
     @DisplayName("1.0 Успешное добавление одного билета в корзину с авторизацией по UID")
     void shouldAuthWithUidAndAddTicketInCart() {
         mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
@@ -221,7 +227,7 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("2.8 Отображение ошибки 'Не найден покупатель по номеру карты' при авторизации по UID")
+    @DisplayName("2.8 Отображение ошибки 'Не найден покупатель по номеру карты' при авторизации по UID невалидной карты")
     void shouldDisplayErrorOnAuthWithInvalidCard() {
         mainPage.auth.authWithCardUid(AuthData.Cards.getInvalidCardUid());
 

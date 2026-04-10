@@ -1,8 +1,10 @@
 package components;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
@@ -28,10 +30,12 @@ public class MainPage {
         this.refillAccount = new RefillAccount();
     }
 
-//        logo.shouldBe(Condition.exist);
-//        ticketsHeader.getText().equals("Выбрать билеты");
-//        eventsHeader.getText().equals("Выбрать событие");
-//        accountHeader.getText().equals("Счет");
-//        refillSubtitle.getText().equals("Выберите сумму пополнения");
-//        refillTitle.getText().equals("Введите сумму пополнения");
+    public void checkElementsInMainPage() {
+        logo.shouldBe(exist);
+        ticketsHeader.shouldHave(text("Выбрать билеты"));
+        eventsHeader.shouldHave (text("Выбрать событие"));
+        accountHeader.shouldHave (text("Счет"));
+        refillSubtitle.shouldHave (text("Выберите сумму пополнения"));
+        refillTitle.shouldHave (text("Введите сумму пополнения"));
+    }
 }
