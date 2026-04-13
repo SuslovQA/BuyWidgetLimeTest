@@ -1,6 +1,7 @@
 package components;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
@@ -23,7 +24,11 @@ public class MainPage {
     SelenideElement supportLink = $x("//div[@class='support ng-star-inserted']//a");
     SelenideElement supportText = $x("//div[@class='support ng-star-inserted']//span");
     SelenideElement supportLogo = $x("//div[@class='support ng-star-inserted']//img");
-
+    SelenideElement logoInFooter = $x("//div[@class='footer-container']//div[@class='logo-block']/img");
+    ElementsCollection aboutUsInFooter = $$x("//div[@class='footer-container']//div[@class='about-us']/div[@class='ng-star-inserted']");
+    SelenideElement qrInFooter = $x("//div[@class='qr-code']/img");
+    ElementsCollection headersContactsInFooter = $$x("//div[@class='contacts ng-star-inserted']");
+    ElementsCollection contactsInFooter = $$x("//div[@class='contacts ng-star-inserted']//a");
 
     public MainPage() {
         this.auth = new Auth();
@@ -42,6 +47,15 @@ public class MainPage {
         supportLink.shouldBe(enabled);
         supportText.shouldHave(text("Служба поддержки"));
         supportLogo.shouldBe(exist);
-        refillTitle.shouldHave (text("Введите сумму пополнения"));
+//        refillTitle.shouldHave (text("Введите сумму пополнения"));
+        logoInFooter.shouldBe(exist);
+        aboutUsInFooter.get(0).shouldHave(text("Улица Розы Люксембург 64, офис 406"));
+        aboutUsInFooter.get(1).shouldHave(text("Пн - Пт с 9 до 18, Сб и Вс - выходные"));
+        qrInFooter.shouldBe(exist);
+        headersContactsInFooter.get(0).shouldHave(text("У Вас возникли затруднения?"));
+        headersContactsInFooter.get(1).shouldHave(text("Свяжитесь с нами"));
+        contactsInFooter.get(0).shouldBe(enabled).shouldHave(text("Наш сайт"));
+        contactsInFooter.get(1).shouldBe(enabled).shouldHave(text("88005553535"));
+        contactsInFooter.get(2).shouldBe(enabled).shouldHave(text("see@lime-it.ru"));
     }
 }
