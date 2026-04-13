@@ -27,7 +27,7 @@ public class MainPage {
     SelenideElement logoInFooter = $x("//div[@class='footer-container']//div[@class='logo-block']/img");
     ElementsCollection aboutUsInFooter = $$x("//div[@class='footer-container']//div[@class='about-us']/div[@class='ng-star-inserted']");
     SelenideElement qrInFooter = $x("//div[@class='qr-code']/img");
-    ElementsCollection headersContactsInFooter = $$x("//div[@class='contacts ng-star-inserted']");
+    ElementsCollection headersContactsInFooter = $$x("//div[@class='contacts ng-star-inserted']/div");
     ElementsCollection contactsInFooter = $$x("//div[@class='contacts ng-star-inserted']//a");
 
     public MainPage() {
@@ -47,7 +47,7 @@ public class MainPage {
         supportLink.shouldBe(enabled);
         supportText.shouldHave(text("Служба поддержки"));
         supportLogo.shouldBe(exist);
-//        refillTitle.shouldHave (text("Введите сумму пополнения"));
+        refillTitle.shouldHave (text("Введите сумму пополнения"));
         logoInFooter.shouldBe(exist);
         aboutUsInFooter.get(0).shouldHave(text("Улица Розы Люксембург 64, офис 406"));
         aboutUsInFooter.get(1).shouldHave(text("Пн - Пт с 9 до 18, Сб и Вс - выходные"));
