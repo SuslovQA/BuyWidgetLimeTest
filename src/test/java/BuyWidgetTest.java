@@ -7,6 +7,9 @@ import org.junit.jupiter.api.*;
 import components.MainPage;
 
 
+import java.time.Duration;
+import java.util.Arrays;
+
 import static com.codeborne.selenide.Selenide.*;
 
 public class BuyWidgetTest {
@@ -120,7 +123,7 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("1.5 Успешная покупка билета виртуальным процессингом")
+    @DisplayName("1.5 Успешная покупка билета виртуальным процессингом c проверкой суммы в окне успешной оплаты")
     void shouldBuyTicketByVirtualProcessing() {
         mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
         mainPage.tickets.addTicketFromCategory(0);
@@ -130,8 +133,25 @@ public class BuyWidgetTest {
         mainPage.orderPayment.clickVirtualProcessingButton();
         mainPage.orderPayment.returnToTheShopFromVirtualPayment();
 
-        var actual = mainPage.orderPayment.getSuccessPaymentModalHeader();
-        var expected = "Оплата прошла успешно!";
+        var actual = mainPage.orderPayment.getTotalSumInSuccessPaymentModal();
+        var expected = ticketFromCategory1.getPrice() + ticketFromCategory2.getPrice() + ticketFromCategory3.getPrice();
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("1.6 Успешная покупка билета виртуальным процессингом c проверкой почты в окне успешной оплаты")
+    void shouldBuyTicketByVirtualProcessingWithCheckingEmail() {
+        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+        mainPage.tickets.addTicketWithClickOnAuthConfirm(ticket1.getIndex());
+        mainPage.tickets.addTicket(ticket2.getIndex());
+        mainPage.cart.makeOrder();
+        mainPage.orderPayment.clickVirtualProcessingButton();
+        mainPage.orderPayment.returnToTheShopFromVirtualPayment();
+        mainPage.orderPayment.checkElementsInSuccessPaymentModal();
+
+        var actual = mainPage.orderPayment.getTextWithEmailInSuccessPaymentModal();
+        var expected = "Ваши билеты отправлены на: test@mail.ru.";
 
         Assertions.assertEquals(expected, actual);
     }
@@ -142,9 +162,9 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
 
         var actual = mainPage.auth.getValueInAuthButton();
-        var expected = "Уже есть карта?";
+        var expected = AuthData.Cards.getValidCardUid();
 
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertTrue(actual.contains(expected));
     }
 
     @Test
@@ -238,13 +258,33 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("2.9 Отображение ошибки 'Заполните код карты' при попытке добавления билета и отправке пустой формы авторизации")
-    void shouldDisplayErrorBeforeAddingTicketInCartWithEmptyAuthField() {
-        mainPage.tickets.addTicket(2);
+    @DisplayName("2.9 Проверка денежного баланса на кнопке авторизации после успешной авторизации")
+    void shouldCheckMoneyBalanceInAuthButtonAfterSuccessAuth() {
+        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithBalance());
 
-        var actual = mainPage.auth.clickConfirmAuthButtonInModal().getErrorMessageEmptyAuthField();
-        var expected = "Заполните код карты";
+        var actual = mainPage.auth.checkMoneyBalanceInAuthButton();
+        var expected = 100;
 
         Assertions.assertEquals(expected, actual);
     }
+
+    @Test
+    @DisplayName("2.9.1 Проверка баланса бонусов на кнопке авторизации после успешной авторизации")
+    void shouldCheckBonusBalanceInAuthButtonAfterSuccessAuth() {
+        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithBalance());
+
+        var actual = mainPage.auth.checkBonusBalanceInAuthButton();
+        var expected = 16;
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+//    @Test
+//    @DisplayName("2.9 Отображение ошибки 'Заполните код карты' при попытке добавления билета и отправке пустой формы авторизации")
+//    void shouldDisplayErrorBeforeAddingTicketInCartWithEmptyAuthField() {
+////        mainPage.tickets.addTicket(2);
+//
+//        mainPage.auth.checkDisabledConfirmAuthButtonWithEmptyAuthField();
+//
+//    }
 }

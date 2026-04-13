@@ -42,6 +42,12 @@ public class Tickets {
         for (int i = 0; i < countEqualsTickets - 1; i++) {
             addTicketButton.get(index).click();
         }
+//        for (int i = 0; i < countEqualsTickets; i++) {
+//            addTicketButton.get(index).click();
+//            if (Auth.authModalConfirmButton.exists()) {
+//                Auth.authModalConfirmButton.click();
+//            }
+//        }
 
     }
 

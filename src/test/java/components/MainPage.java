@@ -5,8 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.*;
 
 public class MainPage {
     public final Auth auth;
@@ -21,6 +20,10 @@ public class MainPage {
     SelenideElement accountHeader = $(By.tagName("h3"));
     SelenideElement refillSubtitle = $(By.className("refill-subtitle"));
     SelenideElement refillTitle = $(By.className("refill-title"));
+    SelenideElement supportLink = $x("//div[@class='support ng-star-inserted']//a");
+    SelenideElement supportText = $x("//div[@class='support ng-star-inserted']//span");
+    SelenideElement supportLogo = $x("//div[@class='support ng-star-inserted']//img");
+
 
     public MainPage() {
         this.auth = new Auth();
@@ -36,6 +39,9 @@ public class MainPage {
         eventsHeader.shouldHave (text("Выбрать событие"));
         accountHeader.shouldHave (text("Счет"));
         refillSubtitle.shouldHave (text("Выберите сумму пополнения"));
+        supportLink.shouldBe(enabled);
+        supportText.shouldHave(text("Служба поддержки"));
+        supportLogo.shouldBe(exist);
         refillTitle.shouldHave (text("Введите сумму пополнения"));
     }
 }

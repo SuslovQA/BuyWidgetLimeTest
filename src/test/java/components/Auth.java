@@ -4,6 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.Selenide.*;
 
 public class Auth {
@@ -15,40 +17,35 @@ public class Auth {
     SelenideElement errorMessageEmptyAuthField = $(By.xpath("//div[@class='message-body']//div[@class='description ng-star-inserted']"));
     SelenideElement errorMessageWithInvalidAuthData = $(By.xpath("//div[@class='message-body']//div[@class='description ng-star-inserted']"));
     SelenideElement accountBalanceHeader = $x("//div[@class='account-balance']/h4");
-    SelenideElement moneyBalance = $x("//div[@class='balance-data']/div[1]");
-    SelenideElement bonusBalance = $x("//div[@class='balance-data']/div[2]");
-    SelenideElement bonusExpiration = $x("//div[@class='balance-data']/div[3]");
+    SelenideElement moneyBalance = $x("//div[@class='balance-data ng-star-inserted']/div[1]");
+    SelenideElement bonusBalance = $x("//div[@class='balance-data ng-star-inserted']/div[2]");
+    SelenideElement bonusExpiration = $x("//div[@class='balance-data ng-star-inserted']/div[3]");
+    SelenideElement balanceInAuthButton = $x("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']");
     SelenideElement refillAccountButton = $x("//div[@class='account-balance']//button[@class='p-ripple p-button p-component']");
     SelenideElement logOutButton = $x("//div[@class='account-balance']//button[@class='p-ripple p-button p-component p-button-outlined']");
 
-    public Auth authWithCardUid(String cardUid) {
+    public void authWithCardUid(String cardUid) {
         authButton.click();
         authModalInput.sendKeys(cardUid);
         authModalConfirmButton.click();
-
-        return this;
     }
 
-    public Auth authWithEmail(String email) {
+    public void authWithEmail(String email) {
         authButton.click();
         authModalInput.sendKeys(email);
         authModalConfirmButton.click();
-
-        return this;
     }
 
-    public Auth clickConfirmAuthButtonInModal() {
+    public void clickConfirmAuthButtonInModal() {
         authModalConfirmButton.click();
-
-        return this;
     }
 
 //    public static void clickModalAuthButton() {
 //        authModalConfirmButton.click();
 //    }
 
-    public String getErrorMessageEmptyAuthField() {
-        return errorMessageEmptyAuthField.shouldBe(Condition.visible).getText();
+    public void checkDisabledConfirmAuthButtonWithEmptyAuthField() {
+        errorMessageEmptyAuthField.shouldBe(Condition.disabled);
     }
 
     public String getErrorMessageWithInvalidAuthData() {
@@ -97,6 +94,22 @@ public class Auth {
         String[] splitWords = bonusExpiration.getText().split(" ");
 
         return splitWords[3];
+    }
+
+    public int checkMoneyBalanceInAuthButton() {
+        balanceInAuthButton.shouldNotHave(Condition.text("Есть карта?"), Duration.ofSeconds(2));
+
+        String[] splitWords = balanceInAuthButton.getText().split("\\(| ");
+
+        return Integer.parseInt(splitWords[2]);
+    }
+
+    public int checkBonusBalanceInAuthButton() {
+        balanceInAuthButton.shouldNotHave(Condition.text("Есть карта?"), Duration.ofSeconds(2));
+
+        String[] splitWords = balanceInAuthButton.getText().split("\\(| ");
+
+        return Integer.parseInt(splitWords[5]);
     }
 
     public void getRefillAccountFromAuthModal() {
