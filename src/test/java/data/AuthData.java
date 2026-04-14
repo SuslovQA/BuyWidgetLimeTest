@@ -2,10 +2,11 @@ package data;
 
 public class AuthData {
     public static class Cards {
-        private static String validCardUid = "FAFEC877";
-        private static String invalidCardUid = "FAFEC888";
-        private static String validCardUidWithBalance = "FD12A1A1";
-        private static String validCardUidWithZeroBalance = "FD12A1A2";
+        static String validCardUid = "FAFEC877";
+        static String invalidCardUid = "FAFEC888";
+        static String validCardUidWithBalance = "FD12A1A1";
+        static String validCardUidWithZeroBalance = "FD12A1A2";
+        static String validPromoCode = "skidka10";
 
         public static String getValidCardUid() {
             return validCardUid;
@@ -21,6 +22,10 @@ public class AuthData {
 
         public static String getInvalidCardUid() {
             return invalidCardUid;
+        }
+
+        public static String getValidPromoCodeForTenPercentDiscount() {
+            return validPromoCode;
         }
     }
 

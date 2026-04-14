@@ -6,10 +6,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import components.MainPage;
 
-
-import java.time.Duration;
-import java.util.Arrays;
-
 import static com.codeborne.selenide.Selenide.*;
 
 public class BuyWidgetTest {
@@ -277,6 +273,16 @@ public class BuyWidgetTest {
         var expected = 16;
 
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("3.0 Применение скидки в корзине с одним билетом")
+    void shouldApplyingDiscountInCartWithOneTicket() {
+        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+        mainPage.tickets.addTicketWithClickOnAuthConfirm(ticket1.getIndex());
+        mainPage.cart.applyDiscount(AuthData.Cards.getValidPromoCodeForTenPercentDiscount());
+
+        Assertions.assertTrue(mainPage.cart.checkApplyingTenPercentDiscount());
     }
 
 //    @Test
