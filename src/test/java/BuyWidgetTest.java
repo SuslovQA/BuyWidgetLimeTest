@@ -1,6 +1,6 @@
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
-import data.AuthData;
+import data.Cards;
 import data.DataHelper;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
@@ -31,7 +31,7 @@ public class BuyWidgetTest {
 
         Configuration.browser = "chrome";
         Configuration.browserSize = "1920x1080";
-        Configuration.headless = false;
+        Configuration.headless = true;
         Configuration.pageLoadTimeout = 30_000;
         Configuration.pageLoadStrategy = "eager";
 
@@ -52,7 +52,8 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("1.0 Успешное добавление одного билета в корзину с авторизацией по UID")
     void shouldAuthWithUidAndAddTicketInCart() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+//        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_UID);
         mainPage.tickets.addTicketWithClickOnAuthConfirm(ticket1.getIndex());
 
         var actual = mainPage.cart.getItemNameInCart();
@@ -64,7 +65,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("1.1 Успешное добавление одного билета из категории билетов с авторизацией по UID")
     void shouldAuthWithUidAndAddTicketFromGroup() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_UID);
         mainPage.tickets.addFirstTicketFromCategory();
 
         var actual = mainPage.cart.getItemNameInCart();
@@ -76,7 +77,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("1.2 Отображение сообщения 'Товар добавлен в корзину' при успешном добавлении билета в корзину со скролом и авторизацией по UID")
     void shouldDisplaySuccessMessageAddTicketToCart() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_UID);
 
         var actual = mainPage.tickets.clickEnabledNavButtonInSwiper()
                 .addTicketWithClickOnAuthConfirm(ticket3.getIndex())
@@ -89,7 +90,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("1.3 Успешное добавление двух одинаковых билетов в корзину с авторизацией по UID")
     void shouldAddTwoEqualsTicketsToCart() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_UID);
         mainPage.tickets.addSomeEqualsTickets(ticket2.getIndex(), 2);
 
         var actual = mainPage.cart.getItemAmountInCart(0);
@@ -100,14 +101,12 @@ public class BuyWidgetTest {
 
     @Test
     @DisplayName("1.4 Успешное добавление трех разных билетов в корзину с авторизацией по UID")
-    void shouldAddSomeDifferentTicketsToCart() throws InterruptedException {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+    void shouldAddSomeDifferentTicketsToCart() {
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_UID);
         mainPage.tickets.addTicketWithClickOnAuthConfirm(ticket1.getIndex())
                 .addTicket(ticket2.getIndex())
                 .clickEnabledNavButtonInSwiper()
                 .addTicket(ticket3.getIndex());
-
-        Thread.sleep(1000);
 
         var actual = mainPage.cart.getListOfItemsNamesInCart();
 
@@ -121,7 +120,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("1.5 Успешная покупка билета виртуальным процессингом c проверкой суммы в окне успешной оплаты")
     void shouldBuyTicketByVirtualProcessing() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_UID);
         mainPage.tickets.addTicketFromCategory(0);
         mainPage.tickets.addTicketFromCategory(1);
         mainPage.tickets.addTicketFromCategory(2);
@@ -138,7 +137,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("1.6 Успешная покупка билета виртуальным процессингом c проверкой почты в окне успешной оплаты")
     void shouldBuyTicketByVirtualProcessingWithCheckingEmail() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_UID);
         mainPage.tickets.addTicketWithClickOnAuthConfirm(ticket1.getIndex());
         mainPage.tickets.addTicket(ticket2.getIndex());
         mainPage.cart.makeOrder();
@@ -155,10 +154,10 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.0 Успешная авторизация по UID")
     void shouldSuccessAuthWithUid() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_UID);
 
         var actual = mainPage.auth.getValueInAuthButton();
-        var expected = AuthData.Cards.getValidCardUid();
+        var expected = Cards.VALID_CARD_UID;
 
         Assertions.assertTrue(actual.contains(expected));
     }
@@ -166,7 +165,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.1 Проверка денежного баланса в окне авторизации")
     void shouldSuccessCheckingMoneyBalance() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithBalance());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkMoneyBalance();
         var expected = 100;
@@ -177,7 +176,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.2 Проверка нулевого баланса в окне авторизации")
     void shouldSuccessCheckingZeroBalance() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithZeroBalanceBalance());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_WITH_ZERO_BALANCE);
 
         var actual = mainPage.auth.checkMoneyBalance();
         var expected = 0;
@@ -188,7 +187,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.3 Проверка баланса бонусов в окне авторизации")
     void shouldSuccessCheckingBonusBalance() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithBalance());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkBonusBalance();
         var expected = 16;
@@ -199,7 +198,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.4 Проверка баланса сгораемых бонусов в окне авторизации")
     void shouldSuccessCheckingExpirationBonusBalance() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithBalance());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkExpirationBonusBalance();
         var expected = 11;
@@ -210,7 +209,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.5 Проверка даты сгораемых бонусов в окне авторизации")
     void shouldSuccessCheckingDateExpirationBonus() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithBalance());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkExpirationDateBonus();
         var expected = "09.04.2027";
@@ -221,7 +220,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.6 Переход к поплнению счета из окна авторизации после успешной авторизации по UID")
     void shouldSuccessRedirectingToRefillAccountFromAuthModal() {
-       mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithZeroBalanceBalance());
+       mainPage.auth.authWithCardUid(Cards.VALID_CARD_WITH_ZERO_BALANCE);
        mainPage.auth.getRefillAccountFromAuthModal();
 
        var actual = mainPage.refillAccount.getRefillAccountHeader();
@@ -233,7 +232,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.7 Выход из аккаунта после успешной авторизации по UID")
     void shouldSuccessLogoutFromAuthModal() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithZeroBalanceBalance());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_WITH_ZERO_BALANCE);
         mainPage.auth.logout();
 
         var actual = mainPage.auth.getValueInAuthButton();
@@ -245,7 +244,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.8 Отображение ошибки 'Не найден покупатель по номеру карты' при авторизации по UID невалидной карты")
     void shouldDisplayErrorOnAuthWithInvalidCard() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getInvalidCardUid());
+        mainPage.auth.authWithCardUid(Cards.INVALID_CARD_UID);
 
         var actual = mainPage.auth.getErrorMessageWithInvalidAuthData();
         var expected = "Не найден покупатель по номеру карты";
@@ -256,7 +255,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.9 Проверка денежного баланса на кнопке авторизации после успешной авторизации")
     void shouldCheckMoneyBalanceInAuthButtonAfterSuccessAuth() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithBalance());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkMoneyBalanceInAuthButton();
         var expected = 100;
@@ -267,7 +266,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.9.1 Проверка баланса бонусов на кнопке авторизации после успешной авторизации")
     void shouldCheckBonusBalanceInAuthButtonAfterSuccessAuth() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUidWithBalance());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkBonusBalanceInAuthButton();
         var expected = 16;
@@ -278,9 +277,9 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("3.0 Применение скидки в корзине с одним билетом")
     void shouldApplyingDiscountInCartWithOneTicket() {
-        mainPage.auth.authWithCardUid(AuthData.Cards.getValidCardUid());
+        mainPage.auth.authWithCardUid(Cards.VALID_CARD_UID);
         mainPage.tickets.addTicketWithClickOnAuthConfirm(ticket1.getIndex());
-        mainPage.cart.applyDiscount(AuthData.Cards.getValidPromoCodeForTenPercentDiscount());
+        mainPage.cart.applyDiscount(Cards.VALID_PROMOCODE_WITH_TEN_PERCENT_DISCOUNT);
 
         Assertions.assertTrue(mainPage.cart.checkApplyingTenPercentDiscount());
     }

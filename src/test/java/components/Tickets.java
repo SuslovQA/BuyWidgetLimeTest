@@ -1,14 +1,13 @@
 package components;
 
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
 import org.openqa.selenium.By;
-
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static data.DataHelper.isModalDisplayedAfterClick;
 
 public class Tickets {
     ElementsCollection addTicketButton = $$(By.xpath("//lime-card//button"));
@@ -21,37 +20,50 @@ public class Tickets {
 
     public Tickets addTicketWithClickOnAuthConfirm(int index) {
         addTicketButton.get(index).click();
-        Auth.authModalConfirmButton.shouldBe(visible, Duration.ofSeconds(2)).click();
+        Auth.authModalConfirmButton.shouldBe(visible, Duration.ofSeconds(5)).click();
 
         return this;
     }
 
     public Tickets addTicket(int index) {
         addTicketButton.get(index).click();
+        Selenide.sleep(500);
 
         return this;
     }
 
     public void addSomeEqualsTickets(int index, int countEqualsTickets) {
-        addTicketButton.get(index).click();
+//        addTicketButton.get(index).click();
+//
+//        if (Auth.authModalConfirmButton.isDisplayed()) {
+//            Selenide.sleep(1000);
+//
+//            Auth.authModalConfirmButton.click();
+//        }
+//
+////        if (isModalDisplayedAfterClick(Auth.authModalConfirmButton, Duration.ofSeconds(5))) {
+////            Auth.authModalConfirmButton.shouldBe(visible).click();
+////        }
+//
+//        Selenide.sleep(1000);
+//
+//        for (int i = 0; i < countEqualsTickets - 1; i++) {
+//            addTicketButton.get(index).shouldBe(visible).click();
+//        }
+
+        for (int i = 0; i < countEqualsTickets; i++) {
+            addTicketButton.get(index).click();
+            Selenide.sleep(1000);
 
             if (Auth.authModalConfirmButton.exists()) {
                 Auth.authModalConfirmButton.click();
+                Selenide.sleep(500);
             }
-
-        for (int i = 0; i < countEqualsTickets - 1; i++) {
-            addTicketButton.get(index).click();
         }
-//        for (int i = 0; i < countEqualsTickets; i++) {
-//            addTicketButton.get(index).click();
-//            if (Auth.authModalConfirmButton.exists()) {
-//                Auth.authModalConfirmButton.click();
-//            }
-//        }
 
     }
 
-    public Tickets addTicketsWithAuthWOnEmail(int index, String email) {
+    public Tickets addTicketsWithAuthOnEmail(int index, String email) {
         addTicketButton.get(index).click();
 
         if (Auth.authModalConfirmButton.exists()) {

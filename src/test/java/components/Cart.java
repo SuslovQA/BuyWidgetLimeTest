@@ -15,17 +15,25 @@ public class Cart {
     ElementsCollection itemsName = $$x("//div[@class='item-name']");
     ElementsCollection itemsAmount = $$x("//div[@class='items-amount']");
     SelenideElement clearCart = $x("//button[@class='clear-cart']");
+    ElementsCollection deleteAllEqualsItemsButton = $$x("//button[@class='delete-button']");
+    ElementsCollection removeOneTicketMinusButton = $$x("//button[@class='sign-button ng-star-inserted'][1]");
     SelenideElement basePriceItem = $x("//div[@class='base-price']");
-    SelenideElement discountPriceItem = $x("//div[@class='discount-price']");
+    SelenideElement discountPrice = $x("//div[@class='discount-price']");
     SelenideElement makeOrderButton = $x("//p-button[@class='make-order-button']/button");
     SelenideElement promoHeader = $x("//p-accordion-header");
     SelenideElement promoInput = $x("//input[@class='p-inputtext p-component promo-input ng-untouched ng-pristine ng-valid']");
     SelenideElement confirmPromo = $x("//div[@class='tick-addon']");
-    SelenideElement discountSumTitleInCart = $x("//div[@class='discount-sum ng-star-inserted']/div[@class='sum-title']");
-    SelenideElement discountSumAmountInCart = $x("//div[@class='discount-sum ng-star-inserted']/div[@class='sum-amount']");
-    SelenideElement discountPrice = $x("//div[@class='discount-price']");
+    SelenideElement discountSumTitleInTotal = $x("//div[@class='discount-sum ng-star-inserted']/div[@class='sum-title']");
+    SelenideElement discountSumAmountInTotal = $x("//div[@class='discount-sum ng-star-inserted']/div[@class='sum-amount']");
+    SelenideElement baseSumTitleInTotal = $x("//div[@class='base-sum ng-star-inserted']/div[@class='sum-title']");
+    SelenideElement baseSumAmountInTotal = $x("//div[@class='base-sum ng-star-inserted']/div[@class='sum-amount']");
+    SelenideElement sumTitleInTotal = $x("//div[@class='final-sum']/div[@class='sum-title']");
+    SelenideElement sumAmountInTotal = $x("//div[@class='final-sum']/div[@class='sum-amount']");
 
     public String getItemNameInCart() {
+        shopCart.shouldBe(Condition.exist);
+        shopCartHeader.shouldHave(Condition.text("Корзина"));
+
         return itemsName.get(0).getText();
     }
 
@@ -41,26 +49,56 @@ public class Cart {
         clearCart.shouldBe(Condition.text("Очистить все")).click();
     }
 
+    public void removeAllEqualsTicketsInCartByIndex(int indexTicketInCart) {
+        deleteAllEqualsItemsButton.get(indexTicketInCart).click();
+    }
+
+    public void removeOneTicketFromCartByIndex(int indexTicketInCart) {
+        removeOneTicketMinusButton.get(indexTicketInCart).click();
+    }
+
+    public boolean checkRemovingTicketFromCartByTicketName(String nameTicket) {
+        if (!itemsName.texts().contains(nameTicket)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public void makeOrder() {
-        makeOrderButton.shouldBe(Condition.text("оформить заказ")).click();
+        makeOrderButton.shouldBe(Condition.text("Оформить заказ")).click();
     }
 
     public void applyDiscount(String promoCode) {
         promoHeader.shouldBe(Condition.visible);
         promoInput.sendKeys(promoCode);
         confirmPromo.click();
-        discountSumTitleInCart.shouldBe(Condition.visible);
+        discountSumTitleInTotal.shouldBe(Condition.visible);
     }
 
     public boolean checkApplyingTenPercentDiscount() {
+        basePriceItem.shouldHave(Condition.cssValue("text-decoration", "line-through"));
+        discountPrice.shouldHave(Condition.cssValue("color", "rgba(249, 91, 28, 1)"));
+        baseSumTitleInTotal.shouldHave(Condition.text("Стоимость"));
+        discountSumTitleInTotal.shouldHave(Condition.text("Скидка"));
+        sumTitleInTotal.shouldHave(Condition.text("Итого"));
+
         String[] spiltDiscountWords = discountPrice.getText().split(" ");
         String[] spiltBasePriceWords = basePriceItem.getText().split(" ");
+        String[] spiltBasePriceWordsInTotal = baseSumAmountInTotal.getText().split(" ");
+        String[] spiltSumAmountWordsInTotal = sumAmountInTotal.getText().split(" ");
+        String[] spiltDiscountSumAmountWordsInTotal = discountSumAmountInTotal.getText().split(" ");
 
         double stringToDoubleDiscount = Double.parseDouble(spiltDiscountWords[0]);
         double stringToDoubleBasePrice = Double.parseDouble(spiltBasePriceWords[0]);
-        double result = stringToDoubleBasePrice * 0.9;
+        double stringToDoubleBasePriceInTotal = Double.parseDouble(spiltBasePriceWordsInTotal[0]);
+        double stringToDoubleSumAmountInTotal = Double.parseDouble(spiltSumAmountWordsInTotal[0]);
+        double stringToDoubleDiscountSumAmountInTotal = Double.parseDouble(spiltDiscountSumAmountWordsInTotal[0]);
 
-        return result == stringToDoubleDiscount;
+        double resultInCartItem = stringToDoubleBasePrice * 0.9;
+        double resultInTotal = stringToDoubleBasePriceInTotal - stringToDoubleSumAmountInTotal;
+
+        return resultInCartItem == stringToDoubleDiscount && resultInTotal == stringToDoubleDiscountSumAmountInTotal * -1;
     }
 
 //    public String searchTicketInCartByIndex(int index) {
