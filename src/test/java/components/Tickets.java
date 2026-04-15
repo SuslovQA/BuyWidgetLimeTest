@@ -21,6 +21,7 @@ public class Tickets {
     public Tickets addTicketWithClickOnAuthConfirm(int index) {
         addTicketButton.get(index).click();
         Auth.authModalConfirmButton.shouldBe(visible, Duration.ofSeconds(5)).click();
+        Selenide.sleep(500);
 
         return this;
     }
@@ -53,11 +54,11 @@ public class Tickets {
 
         for (int i = 0; i < countEqualsTickets; i++) {
             addTicketButton.get(index).click();
-            Selenide.sleep(1000);
+            Selenide.sleep(2000);
 
             if (Auth.authModalConfirmButton.exists()) {
                 Auth.authModalConfirmButton.click();
-                Selenide.sleep(500);
+                Selenide.sleep(2000);
             }
         }
 

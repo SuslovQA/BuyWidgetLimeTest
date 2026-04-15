@@ -13,7 +13,6 @@ public class OrderPayment {
     SelenideElement authFielInOrderPayment = $(By.xpath("//input[@class='p-inputtext p-component auth-input p-filled']"));
     SelenideElement cartHeader = $x("//div[@class='cart-details']//div[@class='cart-head']/h4");
     ElementsCollection itemsInCart = $$(By.xpath("//div[@class='modal-overlay']//div[@class='item-name']"));
-    //    private ElementsCollection processingButtons = $$x("//lime-processing-button//button");
     static SelenideElement virtualProcessing = $x("//div[contains(text(), ' Онлайн виртуальный ')]/parent::lime-processing-icon/parent::button");
     static SelenideElement onlineProcessing = $x("//div[contains(text(), ' Оплата картой ')]/parent::lime-processing-icon/parent::button");
     SelenideElement returnToTheShopLink = $x("//a");

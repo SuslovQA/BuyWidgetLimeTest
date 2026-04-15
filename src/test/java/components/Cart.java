@@ -1,8 +1,6 @@
 package components;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
 import org.openqa.selenium.By;
 
 import java.util.List;
@@ -10,7 +8,7 @@ import java.util.List;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Cart {
-    SelenideElement shopCart = $(By.className("shop-cart"));
+    SelenideElement shopCart = $x("lime-shop-cart");
     SelenideElement shopCartHeader = $x("//div[@class='cart-head']/h4");
     ElementsCollection itemsName = $$x("//div[@class='item-name']");
     ElementsCollection itemsAmount = $$x("//div[@class='items-amount']");
@@ -54,15 +52,19 @@ public class Cart {
     }
 
     public void removeOneTicketFromCartByIndex(int indexTicketInCart) {
+        int countIndexes = removeOneTicketMinusButton.size();
         removeOneTicketMinusButton.get(indexTicketInCart).click();
+        Selenide.sleep(500);
+
+        removeOneTicketMinusButton.shouldHave(CollectionCondition.size(countIndexes - 1));
+    }
+
+    public boolean checkRemovingCart() {
+        return !shopCart.isDisplayed();
     }
 
     public boolean checkRemovingTicketFromCartByTicketName(String nameTicket) {
-        if (!itemsName.texts().contains(nameTicket)) {
-            return true;
-        }
-
-        return false;
+        return !itemsName.texts().contains(nameTicket);
     }
 
     public void makeOrder() {
