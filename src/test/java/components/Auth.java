@@ -1,7 +1,6 @@
 package components;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
@@ -10,13 +9,12 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Auth {
-    static SelenideElement authModalInput = $(By.xpath("//input[@class='p-inputtext p-component auth-input']"));
-    static SelenideElement authModalConfirmButton = $(By.xpath("//div[@class='confirm-button-container']//button"));
-    SelenideElement imgInAuthIconContainer = $(By.xpath("//div[@class='icon-container']/img"));
-    SelenideElement authButton = $(By.xpath("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']"));
+    static SelenideElement authModalInput = $x("//input[@class='p-inputtext p-component auth-input']");
+    static SelenideElement authModalConfirmButton = $x("//div[@class='confirm-button-container']//button");
+    SelenideElement imgInAuthIconContainer = $x("//div[@class='icon-container']/img");
+    SelenideElement authButton = $x("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']");
     SelenideElement authModal = $x("//div[@class='modal-overlay']");
     SelenideElement errorMessageHeader = $x("//div[@class='head ng-star-inserted']");
-    SelenideElement errorMessageEmptyAuthField = $(By.xpath("//div[@class='message-body']//div[@class='description ng-star-inserted']"));
     SelenideElement errorMessageWithInvalidAuthData = $(By.xpath("//div[@class='message-body']//div[@class='description ng-star-inserted']"));
     SelenideElement accountBalanceHeader = $x("//div[@class='account-balance']/h4");
     SelenideElement moneyBalance = $x("//div[@class='balance-data ng-star-inserted']/div[1]");
@@ -30,7 +28,6 @@ public class Auth {
         authButton.click();
         authModalInput.sendKeys(cardUid);
         authModalConfirmButton.click();
-//        authModal.shouldNotBe(Condition.visible);
     }
 
     public void authWithEmail(String email) {
@@ -133,15 +130,4 @@ public class Auth {
         System.out.println(imgInAuthIconContainer.getAttribute("src"));
         return  imgInAuthIconContainer.getAttribute("src").contains("card.svg");
     }
-
-
-
-
-//  authButton.getText().equals(cardUid.trim());
-
-//    public void authWithData() {
-//        switch (authIndex) {
-//            case 0: authData =;
-//        }
-//    }
 }

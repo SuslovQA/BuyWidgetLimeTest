@@ -302,9 +302,22 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("2.12 Проверка отображения и атрибута 'source' иконки в окне авторизации")
+    @DisplayName("2.12 Проверка атрибута 'source' и отображения иконки в окне авторизации")
     void shouldCheckSourceImgInAuthContainer() {
         Assertions.assertTrue(mainPage.auth.checkSourceOfImgInAuthButton());
+    }
+
+    @Test
+    @DisplayName("2.13 Успешная авторизация с другим UID после авторизации и выхода из аккаунта")
+    void shouldSuccessAuthWithOtherUidAfterLogout() {
+        mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.auth.logout();
+        mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
+
+        var actual = mainPage.auth.getValueInAuthButton();
+        var expected = DataCards.VALID_CARD_WITH_BALANCE;
+
+        Assertions.assertTrue(actual.contains(expected));
     }
 
     @Test

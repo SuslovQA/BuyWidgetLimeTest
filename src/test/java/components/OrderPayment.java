@@ -12,7 +12,7 @@ public class OrderPayment {
     SelenideElement checkboxAgreements = $x("//input[@type='checkbox']");
     SelenideElement authFieldInOrderPayment = $(By.xpath("//input[@class='p-inputtext p-component auth-input p-filled']"));
     SelenideElement cartHeader = $x("//div[@class='cart-details']//div[@class='cart-head']/h4");
-    ElementsCollection itemsInCart = $$(By.xpath("//div[@class='modal-overlay']//div[@class='item-name']"));
+    ElementsCollection itemsInCart = $$x("//div[@class='modal-overlay']//div[@class='item-name']");
     static SelenideElement virtualProcessing = $x("//div[contains(text(), ' Онлайн виртуальный ')]/parent::lime-processing-icon/parent::button");
     static SelenideElement onlineProcessing = $x("//div[contains(text(), ' Оплата картой ')]/parent::lime-processing-icon/parent::button");
     SelenideElement returnToTheShopLink = $x("//a");
@@ -70,7 +70,4 @@ public class OrderPayment {
     public String getTextWithEmailInSuccessPaymentModal() {
         return textWithEmailInSuccessPaymentModal.getText();
     }
-
-    //        orderPaymentHeader.getText().equals("Введите данные для получения заказа");
-//        cartHeader.shouldBe(Condition.text("Корзина"));
 }

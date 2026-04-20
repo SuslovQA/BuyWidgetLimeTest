@@ -4,7 +4,6 @@ import com.codeborne.selenide.*;
 
 import java.util.List;
 
-import static com.codeborne.selenide.CollectionCondition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Cart {

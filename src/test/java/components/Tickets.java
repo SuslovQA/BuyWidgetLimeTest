@@ -1,7 +1,6 @@
 package components;
 
 import com.codeborne.selenide.*;
-import org.openqa.selenium.By;
 
 import java.time.Duration;
 
@@ -9,19 +8,18 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Tickets {
-    ElementsCollection addTicketButton = $$(By.xpath("//lime-card//button"));
-    ElementsCollection ticketsAndCategoryName = $$(By.xpath("//div[@class='name-string']"));
-    ElementsCollection addTicketsFromCategoryPlusButton = $$(By.xpath("//p-card[@class='good-type-list']//button[@class='sign-button ng-star-inserted'][2]"));
+    ElementsCollection addTicketButton = $$x("//lime-card//button");
+    ElementsCollection ticketsAndCategoryName = $$x("//div[@class='name-string']");
+    ElementsCollection addTicketsFromCategoryPlusButton = $$x("//p-card[@class='good-type-list']//button[@class='sign-button ng-star-inserted'][2]");
     SelenideElement successAddToCart = $x("//div[@class='message-block ng-star-inserted']//div[@class='description ng-star-inserted']");
     SelenideElement enabledNavButtonInSwiper = $x("//span[@class='nav-button']");
-    SelenideElement allTicketsButton = $(By.xpath("//span[contains(text(), 'Все билеты')]/parent::button"));
+    SelenideElement allTicketsButton = $x("//span[contains(text(), 'Все билеты')]/parent::button");
     SelenideElement goodTypeTicketItem = $x("//div[@class='good-type-list-item ng-star-inserted']");
     SelenideElement infoMessage = $x("//div[@class='message-body']/div[@class='description ng-star-inserted']");
 
     public Tickets addTicketWithClickOnAuthConfirm(int index) {
         addTicketButton.get(index).click();
         Auth.authModalConfirmButton.shouldBe(visible, Duration.ofSeconds(5)).click();
-//        Selenide.sleep(500);
         Auth.authModalConfirmButton.shouldNotBe(visible);
 
         return this;
@@ -29,39 +27,18 @@ public class Tickets {
 
     public Tickets addTicket(int index) {
         addTicketButton.get(index).click();
-//        Selenide.sleep(500);
         infoMessage.shouldBe(visible).shouldHave(text("Товар добавлен в корзину"));
 
         return this;
     }
 
     public void addSomeEqualsTickets(int index, int countEqualsTickets) {
-//        addTicketButton.get(index).click();
-//
-//        if (Auth.authModalConfirmButton.isDisplayed()) {
-//            Selenide.sleep(1000);
-//
-//            Auth.authModalConfirmButton.click();
-//        }
-//
-////        if (isModalDisplayedAfterClick(Auth.authModalConfirmButton, Duration.ofSeconds(5))) {
-////            Auth.authModalConfirmButton.shouldBe(visible).click();
-////        }
-//
-//        Selenide.sleep(1000);
-//
-//        for (int i = 0; i < countEqualsTickets - 1; i++) {
-//            addTicketButton.get(index).shouldBe(visible).click();
-//        }
-
         for (int i = 0; i < countEqualsTickets; i++) {
             addTicketButton.get(index).click();
-//            Selenide.sleep(2000);
             addTicketButton.get(index).shouldBe(enabled);
 
             if (Auth.authModalConfirmButton.exists()) {
                 Auth.authModalConfirmButton.click();
-//                Selenide.sleep(2000);
 
                 Auth.authModalConfirmButton.shouldNotBe(visible);
             }
