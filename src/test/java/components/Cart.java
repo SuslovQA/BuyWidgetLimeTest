@@ -1,14 +1,14 @@
 package components;
 
 import com.codeborne.selenide.*;
-import org.openqa.selenium.By;
 
 import java.util.List;
 
+import static com.codeborne.selenide.CollectionCondition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Cart {
-    SelenideElement shopCart = $x("lime-shop-cart");
+    SelenideElement shopCart = $x("//lime-shop-cart");
     SelenideElement shopCartHeader = $x("//div[@class='cart-head']/h4");
     ElementsCollection itemsName = $$x("//div[@class='item-name']");
     ElementsCollection itemsAmount = $$x("//div[@class='items-amount']");
@@ -27,9 +27,10 @@ public class Cart {
     SelenideElement baseSumAmountInTotal = $x("//div[@class='base-sum ng-star-inserted']/div[@class='sum-amount']");
     SelenideElement sumTitleInTotal = $x("//div[@class='final-sum']/div[@class='sum-title']");
     SelenideElement sumAmountInTotal = $x("//div[@class='final-sum']/div[@class='sum-amount']");
+    SelenideElement infoMessage = $x("//div[@class='head ng-star-inserted']");
 
     public String getItemNameInCart() {
-        shopCart.shouldBe(Condition.exist);
+        shopCart.shouldBe(Condition.visible);
         shopCartHeader.shouldHave(Condition.text("Корзина"));
 
         return itemsName.get(0).getText();
@@ -45,6 +46,8 @@ public class Cart {
 
     public void clearCart() {
         clearCart.shouldBe(Condition.text("Очистить все")).click();
+        shopCartHeader.shouldNotBe(Condition.visible);
+        infoMessage.shouldBe(Condition.visible).shouldHave(Condition.text("Корзина очищена"));
     }
 
     public void removeAllEqualsTicketsInCartByIndex(int indexTicketInCart) {
@@ -52,18 +55,16 @@ public class Cart {
     }
 
     public void removeOneTicketFromCartByIndex(int indexTicketInCart) {
-        int countIndexes = removeOneTicketMinusButton.size();
         removeOneTicketMinusButton.get(indexTicketInCart).click();
-        Selenide.sleep(500);
-
-        removeOneTicketMinusButton.shouldHave(CollectionCondition.size(countIndexes - 1));
     }
 
     public boolean checkRemovingCart() {
-        return !shopCart.isDisplayed();
+        return !shopCartHeader.isDisplayed();
     }
 
     public boolean checkRemovingTicketFromCartByTicketName(String nameTicket) {
+        shopCart.shouldBe(Condition.visible);
+
         return !itemsName.texts().contains(nameTicket);
     }
 

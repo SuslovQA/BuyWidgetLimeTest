@@ -1,6 +1,7 @@
 package components;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
@@ -11,8 +12,9 @@ import static com.codeborne.selenide.Selenide.*;
 public class Auth {
     static SelenideElement authModalInput = $(By.xpath("//input[@class='p-inputtext p-component auth-input']"));
     static SelenideElement authModalConfirmButton = $(By.xpath("//div[@class='confirm-button-container']//button"));
-    SelenideElement authIconContainer = $(By.xpath("//div[@class='icon-container']"));
+    SelenideElement imgInAuthIconContainer = $(By.xpath("//div[@class='icon-container']/img"));
     SelenideElement authButton = $(By.xpath("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']"));
+    SelenideElement authModal = $x("//div[@class='modal-overlay']");
     SelenideElement errorMessageHeader = $x("//div[@class='head ng-star-inserted']");
     SelenideElement errorMessageEmptyAuthField = $(By.xpath("//div[@class='message-body']//div[@class='description ng-star-inserted']"));
     SelenideElement errorMessageWithInvalidAuthData = $(By.xpath("//div[@class='message-body']//div[@class='description ng-star-inserted']"));
@@ -28,6 +30,7 @@ public class Auth {
         authButton.click();
         authModalInput.sendKeys(cardUid);
         authModalConfirmButton.click();
+//        authModal.shouldNotBe(Condition.visible);
     }
 
     public void authWithEmail(String email) {
@@ -40,12 +43,14 @@ public class Auth {
         authModalConfirmButton.click();
     }
 
-//    public static void clickModalAuthButton() {
-//        authModalConfirmButton.click();
-//    }
+    public void clickAuthButton() {
+        authButton.click();
+    }
 
-    public void checkDisabledConfirmAuthButtonWithEmptyAuthField() {
-        errorMessageEmptyAuthField.shouldBe(Condition.disabled);
+    public boolean checkDisabledConfirmAuthButtonWithEmptyAuthField() {
+        clickAuthButton();
+
+        return authModalConfirmButton.is(Condition.disabled);
     }
 
     public String getErrorMessageWithInvalidAuthData() {
@@ -57,6 +62,7 @@ public class Auth {
     }
 
     public String getValueInAuthButton() {
+        authButton.shouldBe(Condition.enabled);
         return authButton.getText();
     }
 
@@ -120,6 +126,12 @@ public class Auth {
     public void logout() {
         authButton.click();
         logOutButton.click();
+    }
+
+    public boolean checkSourceOfImgInAuthButton() {
+        imgInAuthIconContainer.isDisplayed();
+        System.out.println(imgInAuthIconContainer.getAttribute("src"));
+        return  imgInAuthIconContainer.getAttribute("src").contains("card.svg");
     }
 
 

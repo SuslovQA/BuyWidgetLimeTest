@@ -18,7 +18,7 @@ public class BuyWidgetTest {
 
         Configuration.browser = "chrome";
         Configuration.browserSize = "1920x1080";
-        Configuration.headless = false;
+        Configuration.headless = true;
         Configuration.pageLoadTimeout = 30_000;
         Configuration.pageLoadStrategy = "eager";
 
@@ -296,6 +296,18 @@ public class BuyWidgetTest {
     }
 
     @Test
+    @DisplayName("2.11 Проверка, что кнопка 'Продолжить' в окне авторизации имеет атрбут 'disabled' если не введен UID")
+    void shouldCheckConfirmAuthButtonHaveAttributeIsDisabledWithEmptyAuthField() {
+        Assertions.assertTrue(mainPage.auth.checkDisabledConfirmAuthButtonWithEmptyAuthField());
+    }
+
+    @Test
+    @DisplayName("2.12 Проверка отображения и атрибута 'source' иконки в окне авторизации")
+    void shouldCheckSourceImgInAuthContainer() {
+        Assertions.assertTrue(mainPage.auth.checkSourceOfImgInAuthButton());
+    }
+
+    @Test
     @DisplayName("3.0 Применение скидки в корзине с одним билетом")
     void shouldApplyingDiscountInCartWithOneTicket() {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
@@ -303,6 +315,18 @@ public class BuyWidgetTest {
         mainPage.cart.applyDiscount(DataCards.VALID_PROMOCODE_WITH_TEN_PERCENT_DISCOUNT);
 
         Assertions.assertTrue(mainPage.cart.checkApplyingTenPercentDiscount());
+    }
+
+    @Test
+    @DisplayName("4.0 Проверка количества событий")
+    void shouldCheckCountOfEvents() {
+        Assertions.assertTrue(mainPage.events.checkCountOfEvents(3));
+    }
+
+    @Test
+    @DisplayName("4.1 Проверка текущей даты в календаре в компоненте 'События'")
+    void shouldCheckDateInDatePicker() {
+        Assertions.assertTrue(mainPage.events.checkNowDate());
     }
 
 //    @Test

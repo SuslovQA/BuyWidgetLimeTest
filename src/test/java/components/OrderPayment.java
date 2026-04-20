@@ -10,7 +10,7 @@ import static com.codeborne.selenide.Selenide.*;
 public class OrderPayment {
     SelenideElement orderPaymentHeader = $x("//div[@class='user-data']/h4");
     SelenideElement checkboxAgreements = $x("//input[@type='checkbox']");
-    SelenideElement authFielInOrderPayment = $(By.xpath("//input[@class='p-inputtext p-component auth-input p-filled']"));
+    SelenideElement authFieldInOrderPayment = $(By.xpath("//input[@class='p-inputtext p-component auth-input p-filled']"));
     SelenideElement cartHeader = $x("//div[@class='cart-details']//div[@class='cart-head']/h4");
     ElementsCollection itemsInCart = $$(By.xpath("//div[@class='modal-overlay']//div[@class='item-name']"));
     static SelenideElement virtualProcessing = $x("//div[contains(text(), ' Онлайн виртуальный ')]/parent::lime-processing-icon/parent::button");
@@ -29,7 +29,7 @@ public class OrderPayment {
     }
 
     public boolean checkInputFieldIsEnabled() {
-        return authFielInOrderPayment.isEnabled();
+        return authFieldInOrderPayment.isEnabled();
     }
 
     public String getItemNameInCart(int index) {

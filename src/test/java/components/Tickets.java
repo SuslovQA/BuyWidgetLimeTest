@@ -7,7 +7,6 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static data.DataHelper.isModalDisplayedAfterClick;
 
 public class Tickets {
     ElementsCollection addTicketButton = $$(By.xpath("//lime-card//button"));
@@ -17,18 +16,21 @@ public class Tickets {
     SelenideElement enabledNavButtonInSwiper = $x("//span[@class='nav-button']");
     SelenideElement allTicketsButton = $(By.xpath("//span[contains(text(), 'Все билеты')]/parent::button"));
     SelenideElement goodTypeTicketItem = $x("//div[@class='good-type-list-item ng-star-inserted']");
+    SelenideElement infoMessage = $x("//div[@class='message-body']/div[@class='description ng-star-inserted']");
 
     public Tickets addTicketWithClickOnAuthConfirm(int index) {
         addTicketButton.get(index).click();
         Auth.authModalConfirmButton.shouldBe(visible, Duration.ofSeconds(5)).click();
-        Selenide.sleep(500);
+//        Selenide.sleep(500);
+        Auth.authModalConfirmButton.shouldNotBe(visible);
 
         return this;
     }
 
     public Tickets addTicket(int index) {
         addTicketButton.get(index).click();
-        Selenide.sleep(500);
+//        Selenide.sleep(500);
+        infoMessage.shouldBe(visible).shouldHave(text("Товар добавлен в корзину"));
 
         return this;
     }
@@ -54,11 +56,14 @@ public class Tickets {
 
         for (int i = 0; i < countEqualsTickets; i++) {
             addTicketButton.get(index).click();
-            Selenide.sleep(2000);
+//            Selenide.sleep(2000);
+            addTicketButton.get(index).shouldBe(enabled);
 
             if (Auth.authModalConfirmButton.exists()) {
                 Auth.authModalConfirmButton.click();
-                Selenide.sleep(2000);
+//                Selenide.sleep(2000);
+
+                Auth.authModalConfirmButton.shouldNotBe(visible);
             }
         }
 

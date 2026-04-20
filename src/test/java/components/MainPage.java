@@ -5,6 +5,9 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -14,6 +17,7 @@ public class MainPage {
     public final Cart cart;
     public final OrderPayment orderPayment;
     public final RefillAccount refillAccount;
+    public final Events events;
 
     SelenideElement logo = $(By.tagName("lime-logo"));
     SelenideElement ticketsHeader = $$(By.tagName("h2")).get(0);
@@ -29,6 +33,8 @@ public class MainPage {
     SelenideElement qrInFooter = $x("//div[@class='qr-code']/img");
     ElementsCollection headersContactsInFooter = $$x("//div[@class='contacts ng-star-inserted']/div");
     ElementsCollection contactsInFooter = $$x("//div[@class='contacts ng-star-inserted']//a");
+    SelenideElement datePicker = $x("//p-date-picker");
+    SelenideElement selectedDateInCalendar = $x("//span[@class='p-ripple ng-tns-c2825477640-2 p-datepicker-day p-datepicker-day-selected ng-star-inserted']");
 
     public MainPage() {
         this.auth = new Auth();
@@ -36,6 +42,7 @@ public class MainPage {
         this.cart = new Cart();
         this.orderPayment = new OrderPayment();
         this.refillAccount = new RefillAccount();
+        this.events = new Events();
     }
 
     public void checkElementsInMainPage() {
@@ -57,5 +64,6 @@ public class MainPage {
         contactsInFooter.get(0).shouldBe(enabled).shouldHave(text("Наш сайт"));
         contactsInFooter.get(1).shouldBe(enabled).shouldHave(text("88005553535"));
         contactsInFooter.get(2).shouldBe(enabled).shouldHave(text("see@lime-it.ru"));
+        datePicker.shouldBe(exist);
     }
 }
