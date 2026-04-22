@@ -37,6 +37,15 @@ public class MainPage {
     ElementsCollection refillSumAmounts = $$x("//div[@class='sum-amount']");
     SelenideElement refillInput = $x("//input[@class='p-inputtext p-component p-inputnumber-input']");
     SelenideElement addRefillInCartButton = $x("//div[@class='free-refill ng-star-inserted']//button[@class='p-ripple p-button p-component']");
+    ElementsCollection imgInItemCard = $$x("//img[@class='card-img ng-star-inserted']");
+    ElementsCollection priceOnGoodCards = $$x("//lime-carousel[1]//p[@class='lime-full-price']");
+    ElementsCollection priceOnEventCards = $$x("//lime-carousel[2]//p[@class='lime-full-price']");
+    SelenideElement enabledNavButtonProgressBar = $x("//span[@class='nav-button']");
+    ElementsCollection disabledNavButtonProgressBar = $$x("//span[@class='nav-button disabled']");
+    ElementsCollection namesOfGoods = $$x("//lime-carousel[1]//div[@class='name-string']");
+    ElementsCollection namesOfEvents = $$x("//lime-carousel[2]//div[@class='name-string']");
+    ElementsCollection addTicketButtonsInCards = $$x("//lime-carousel[1]//button[@class='p-ripple p-button p-component']");
+    ElementsCollection addEventsButtonsInCards = $$x("//lime-carousel[2]//button[@class='p-ripple p-button p-component']");
 
     public MainPage() {
         this.auth = new Auth();
@@ -56,6 +65,17 @@ public class MainPage {
         supportLink.shouldBe(enabled).shouldBe(attribute("href", "https://lime-it.ru/contact/?ysclid=mnmu7tbnw4724828617"));
         supportText.shouldHave(text("Служба поддержки"));
         supportLogo.shouldBe(exist);
+        progressIndicators.get(0).shouldBe(enabled).shouldHave(attribute("style", "width: 50%; left: 0%;"));
+        progressIndicators.get(1).shouldBe(enabled).shouldHave(attribute("style", "width: 100%; left: 0%;"));
+        enabledNavButtonProgressBar.shouldBe(visible);
+        disabledNavButtonProgressBar.shouldHave(CollectionCondition.size(3));
+        priceOnGoodCards.get(0).shouldHave(text("от 10,22"));
+        priceOnGoodCards.get(1).shouldHave(text("150"));
+        priceOnGoodCards.get(2).shouldHave(text("11"));
+        priceOnEventCards.get(0).shouldHave(text("от 500"));
+        priceOnEventCards.get(1).shouldHave(text("от 200"));
+        priceOnEventCards.get(2).shouldHave(text("от 100"));
+//        priceOnGoodCards.get(3).shouldHave(text("1000"));
         refillTitle.shouldHave (text("Введите сумму пополнения"));
         refillSumAmounts.shouldHave(CollectionCondition.size(4));
         refillSumAmounts.get(0).shouldHave(text("100"));
@@ -75,5 +95,14 @@ public class MainPage {
         contactsInFooter.get(1).shouldBe(enabled).shouldHave(text("88005553535"));
         contactsInFooter.get(2).shouldBe(enabled).shouldHave(text("see@lime-it.ru"));
         datePicker.shouldBe(exist);
+        imgInItemCard.get(0).shouldBe(exist).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/147816/GoodType/Image/2C2007A8A538720BB70149D0261E0BFC.png"));
+        imgInItemCard.get(1).shouldBe(exist).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/147816/Service/Image/AB9DBAE53EB6EA5183040E0605F1AA8D.png"));
+        imgInItemCard.get(2).shouldBe(exist).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/147816/Service/Image/7A322EB795C2A59DE8827D29021A7DF4.png"));
+        namesOfGoods.get(0).shouldHave(text("Много билетов"));
+        namesOfGoods.get(1).shouldHave(text("Аквапарк"));
+        namesOfGoods.get(2).shouldHave(text("Хамам"));
+//        namesOfGoods.get(3).shouldHave(text("Бани"));
+        namesOfGoods.shouldHave(CollectionCondition.size(4));
+
     }
 }
