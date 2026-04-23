@@ -2,6 +2,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import data.DataCards;
 import data.DataEmails;
+import data.DataHelper;
 import data.DataTickets;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
@@ -173,6 +174,34 @@ public class BuyWidgetTest {
     }
 
     @Test
+    @DisplayName("1.10 Открытие и закрытие категории билетов без авторизации")
+    void shouldCheckOpenAndCloseTicketCategory() {
+        Assertions.assertTrue(mainPage.tickets.checkCloseCategoryTickets());
+    }
+
+    @Test
+    @DisplayName("1.11 Открытие всех билетов после нажатия кнопки 'Все билеты'")
+    void shouldCheckOpeningAllTickets() {
+        Assertions.assertTrue(mainPage.tickets.checkTicketAfterClickOnAll());
+    }
+
+    @Test
+    @DisplayName("1.12 Возврат на главную страницу после открытия всех билетов по нажатию на кнопку 'home-back'(стрелка)")
+    void shouldReturnBackToMainPageFromAllTicketsAfterClickHomeBackButton() {
+        mainPage.tickets.clickOnAllTicketsButton();
+
+        Assertions.assertTrue(mainPage.tickets.checkReturningToMainPageFromAllTicketsAfterClickOnHomeBackButton());
+    }
+
+    @Test
+    @DisplayName("1.13 Возврат на главную страницу после открытия всех билетов по нажатию на лого в хэдере")
+    void shouldReturnBackToMainPageFromAllTicketsAfterClickLogoInHeader() {
+        mainPage.tickets.clickOnAllTicketsButton();
+
+        Assertions.assertTrue(mainPage.tickets.checkReturningToMainPageFromAllTicketsAfterClickOnLogoInHeader());
+    }
+
+    @Test
     @DisplayName("2.0 Успешная авторизация по UID")
     void shouldSuccessAuthWithUid() {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
@@ -296,7 +325,7 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("2.11 Проверка, что кнопка 'Продолжить' в окне авторизации имеет атрбут 'disabled' если не введен UID")
+    @DisplayName("2.11 Проверкакнопка наличия атрбута 'disabled' у кнопки 'Продолжить' в окне авторизации если не введен UID")
     void shouldCheckConfirmAuthButtonHaveAttributeIsDisabledWithEmptyAuthField() {
         Assertions.assertTrue(mainPage.auth.checkDisabledConfirmAuthButtonWithEmptyAuthField());
     }
@@ -320,8 +349,64 @@ public class BuyWidgetTest {
         Assertions.assertTrue(actual.contains(expected));
     }
 
+
     @Test
-    @DisplayName("3.0 Применение скидки в корзине с одним билетом")
+    @DisplayName("3.0 Проверка количества событий")
+    void shouldCheckCountOfEvents() {
+        Assertions.assertTrue(mainPage.events.checkCountOfEvents(3));
+    }
+
+    @Test
+    @DisplayName("3.1 Проверка текущей даты в календаре в компоненте 'События'")
+    void shouldCheckDateInDatePicker() {
+        Assertions.assertTrue(mainPage.events.checkNowDate());
+    }
+
+    @Test
+    @DisplayName("4.0 Проверка добавления сумму в корзину по нажатию кнопки 'Выбора суммы'")
+    void shouldCheckSumInCartAfterRefillFromSumButtons() {
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.refillAccount.AddSumFromButtonsSumsByIndex(0);
+
+        var actual= mainPage.refillAccount.getAddedSumInCart();
+        var expected = mainPage.refillAccount.getAmountSumsList().get(0);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("4.1 Проверка добавления суммы в корзину при переходе к пополнению из окна авторизации")
+    void shouldCheckSumInCartAfterTransferToRefillFromAuthModal() {
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.auth.getRefillAccountFromAuthModal();
+        mainPage.refillAccount.AddSumFromButtonsSumsByIndex(3);
+
+        var expected = mainPage.refillAccount.getAddedSumInCart();
+        var actual = DataHelper.replaceUnicodeSpaceCharacterToSpace(mainPage.refillAccount.getAmountSumsList().get(3));
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("4.2 Проверка добавления суммы в корзину при вводе случайной суммы в поле воода суммы")
+    void shouldCheckSumInCartRefillFromInputWithRandomSum() {
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.refillAccount.addSumFromInput(DataHelper.getRandomSum());
+
+        var actual = mainPage.refillAccount.getAddedSumInCart();
+        var expected = 100;
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("5.0 Проверка элементов (заголовок, иконка, текст) в модальном окне с информацией в билете 'Хамам'")
+    void shouldCheckElementsInModalInfoInTicketCard() {
+        Assertions.assertTrue(mainPage.tickets.checkElementSInInfoModal());
+    }
+
+    @Test
+    @DisplayName("6.0 Применение скидки в корзине с одним билетом")
     void shouldApplyingDiscountInCartWithOneTicket() {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
         mainPage.tickets.addTicketWithClickOnAuthConfirm(DataTickets.TICKET_1.getIndex());
@@ -330,24 +415,4 @@ public class BuyWidgetTest {
         Assertions.assertTrue(mainPage.cart.checkApplyingTenPercentDiscount());
     }
 
-    @Test
-    @DisplayName("4.0 Проверка количества событий")
-    void shouldCheckCountOfEvents() {
-        Assertions.assertTrue(mainPage.events.checkCountOfEvents(3));
-    }
-
-    @Test
-    @DisplayName("4.1 Проверка текущей даты в календаре в компоненте 'События'")
-    void shouldCheckDateInDatePicker() {
-        Assertions.assertTrue(mainPage.events.checkNowDate());
-    }
-
-//    @Test
-//    @DisplayName("2.9 Отображение ошибки 'Заполните код карты' при попытке добавления билета и отправке пустой формы авторизации")
-//    void shouldDisplayErrorBeforeAddingTicketInCartWithEmptyAuthField() {
-////        mainPage.tickets.addTicket(2);
-//
-//        mainPage.auth.checkDisabledConfirmAuthButtonWithEmptyAuthField();
-//
-//    }
 }

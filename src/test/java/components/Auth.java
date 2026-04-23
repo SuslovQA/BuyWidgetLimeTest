@@ -26,8 +26,25 @@ public class Auth {
 
     public void authWithCardUid(String cardUid) {
         authButton.click();
+
+//        authModal.shouldBe(Condition.exist);
+
         authModalInput.sendKeys(cardUid);
         authModalConfirmButton.click();
+
+//        authModal.shouldNotBe(Condition.exist);
+    }
+
+    public void doubleAuthWithCardUid(String cardUid) {
+        $$x("//lime-card//button").get(1).click();
+
+        authModal.shouldBe(Condition.exist);
+        authModalInput.sendKeys(cardUid);
+        authModalConfirmButton.click();
+        authModal.shouldNotBe(Condition.exist);
+
+        $x("//button[@class='clear-cart']").click();
+        $x("//lime-products-list").shouldNotBe(Condition.exist);
     }
 
     public void authWithEmail(String email) {
