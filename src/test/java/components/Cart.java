@@ -67,15 +67,19 @@ public class Cart {
         return !itemsName.texts().contains(nameTicket);
     }
 
-    public void makeOrder() {
+    public OrderPayment makeOrder() {
         makeOrderButton.shouldBe(Condition.text("Оформить заказ")).click();
+
+        return new OrderPayment();
     }
 
-    public void applyDiscount(String promoCode) {
+    public Cart applyDiscount(String promoCode) {
         promoHeader.shouldBe(Condition.visible);
         promoInput.sendKeys(promoCode);
         confirmPromo.click();
         discountSumTitleInTotal.shouldBe(Condition.visible);
+
+        return this;
     }
 
     public boolean checkApplyingTenPercentDiscount() {
@@ -102,16 +106,4 @@ public class Cart {
 
         return resultInCartItem == stringToDoubleDiscount && resultInTotal == stringToDoubleDiscountSumAmountInTotal * -1;
     }
-
-//    public String searchTicketInCartByIndex(int index) {
-//        return itemsName.get(index).getText();
-//
-//    }
-
-    // remove ticket
-    // remove all tickets
-    // + ticket in cart
-    // - ticket in cart
-    //        shopCart.shouldBe(Condition.exist);
-    //        shopCartHeader.shouldBe(Condition.visible).getText().trim().equals("Корзина");
 }

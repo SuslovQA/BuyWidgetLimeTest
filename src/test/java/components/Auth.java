@@ -1,10 +1,12 @@
 package components;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
 import java.time.Duration;
+import java.util.Arrays;
 
 import static com.codeborne.selenide.Selenide.*;
 
@@ -23,6 +25,7 @@ public class Auth {
     SelenideElement balanceInAuthButton = $x("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']");
     SelenideElement refillAccountButton = $x("//div[@class='account-balance']//button[@class='p-ripple p-button p-component']");
     SelenideElement logOutButton = $x("//div[@class='account-balance']//button[@class='p-ripple p-button p-component p-button-outlined']");
+    SelenideElement addFirstTicketTicket = $$x("//button[@class='p-ripple p-button p-component']").get(1);
 
     public void authWithCardUid(String cardUid) {
         authButton.click();
@@ -36,7 +39,7 @@ public class Auth {
     }
 
     public void doubleAuthWithCardUid(String cardUid) {
-        $$x("//lime-card//button").get(1).click();
+        addFirstTicketTicket.click();
 
         authModal.shouldBe(Condition.exist);
         authModalInput.sendKeys(cardUid);
@@ -116,20 +119,50 @@ public class Auth {
         return splitWords[3];
     }
 
-    public int checkMoneyBalanceInAuthButton() {
+    public String getMoneyBalanceInAuthButton() {
         balanceInAuthButton.shouldNotHave(Condition.text("Есть карта?"), Duration.ofSeconds(2));
 
-        String[] splitWords = balanceInAuthButton.getText().split("\\(| ");
+        if (balanceInAuthButton.getText().split(" ").length != 1) {
 
-        return Integer.parseInt(splitWords[2]);
+            String replacedWords = balanceInAuthButton.getText().replace('(', ' ');
+
+            String[] splitWords = replacedWords.split("\\(| ");
+
+            String result = splitWords[2];
+
+            if (splitWords[2].equals("1") || splitWords[2].equals("2") || splitWords[2].equals("3")) {
+                result = splitWords[2] + splitWords[3];
+            }
+
+
+            return result;
+        }
+        return "0";
     }
 
-    public int checkBonusBalanceInAuthButton() {
+    public String getMoneyBalanceInAuthButtonWithoutSpaces() {
+        balanceInAuthButton.shouldNotHave(Condition.text("Есть карта?"), Duration.ofSeconds(2));
+        String result = "";
+
+        String replacedWords = balanceInAuthButton.getText().replace('(', ' ');
+        String[] splitWords = replacedWords.split("\\(| ");
+
+        result = splitWords[2];
+
+
+        if (splitWords[2].equals("1") || splitWords[2].equals("2") || splitWords[2].equals("3")) {
+            result = splitWords[2] + splitWords[3];
+        }
+
+        return result;
+    }
+
+    public String checkBonusBalanceInAuthButton() {
         balanceInAuthButton.shouldNotHave(Condition.text("Есть карта?"), Duration.ofSeconds(2));
 
         String[] splitWords = balanceInAuthButton.getText().split("\\(| ");
 
-        return Integer.parseInt(splitWords[5]);
+        return splitWords[5];
     }
 
     public void getRefillAccountFromAuthModal() {

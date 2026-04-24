@@ -23,6 +23,7 @@ public class OrderPayment {
     SelenideElement imgStatusOk = $x("//div[@class='paid-order']/img");
     SelenideElement downloadTicketsButton = $x("//button[@class='download-ticket ng-star-inserted']");
     SelenideElement downloadTicketsImg = $x("//button[@class='download-ticket ng-star-inserted']/img");
+    SelenideElement closeStatusPaymentModalButton = $x("//button[@class='close-button ng-star-inserted']");
 
     public void clickCheckboxAgreements() {
         checkboxAgreements.click();
@@ -36,35 +37,56 @@ public class OrderPayment {
         return itemsInCart.get(index).getText();
     }
 
-    public void clickVirtualProcessingButton() {
+    public OrderPayment clickVirtualProcessingButton() {
         virtualProcessing.click();
+
+        return this;
     }
 
     public void clickOnlineProcessingButton() {
         onlineProcessing.click();
     }
 
-    public void returnToTheShopFromVirtualPayment() {
+    public OrderPayment returnToTheShopFromVirtualPayment() {
         returnToTheShopLink.click();
+
+        return this;
     }
 
-    public void checkElementsInSuccessPaymentModal() {
+    public void returnToTheShopFromVirtualPaymentAndCloseStatusModal() {
+        returnToTheShopLink.click();
+        closeStatusPaymentModalButton.click();
+    }
+
+    public OrderPayment checkElementsInSuccessPaymentModal() {
         successPaymentHeader.shouldHave(Condition.text("Оплата прошла успешно!"));
         textForDownloadingTicketsInSuccessPaymentModal.shouldHave(Condition.text("Билеты будут скачаны автоматически, если нет, то нажмите на кнопку:"));
         imgStatusOk.shouldBe(Condition.exist);
         downloadTicketsButton.shouldBe(Condition.enabled).shouldHave(Condition.text("Скачать билеты"));
         downloadTicketsImg.shouldBe(Condition.exist);
+        return this;
     }
 
     public String getSuccessPaymentModalHeader() {
         return successPaymentHeader.getText();
     }
 
-    public double getTotalSumInSuccessPaymentModal() {
+    public String getTotalSumInSuccessPaymentModal() {
         successPaymentHeader.shouldBe(Condition.visible);
 
         String[] splitWords = totalSumInSuccessPaymentModal.getText().split(" ");
-        return Double.parseDouble(splitWords[1].replace(',', '.'));
+
+        String result = splitWords[1].replace(',', '.');
+
+        if (!result.contains(".")) {
+           result += ".0";
+        }
+
+        return result;
+    }
+
+    public String checkSumAddedTicketWithDiscount(double ticketPrice) {
+        return String.valueOf(ticketPrice * 0.9);
     }
 
     public String getTextWithEmailInSuccessPaymentModal() {

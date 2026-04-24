@@ -4,7 +4,6 @@ import com.codeborne.selenide.*;
 import data.DataHelper;
 
 import java.time.Duration;
-import java.util.stream.Stream;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
@@ -32,6 +31,7 @@ public class Tickets {
     ElementsCollection ticketsInAll = $$x("//p-card");
     SelenideElement eventsHeader = $x("//lime-carousel[2]//h2");
     SelenideElement refillAccountHeader =$x("//h3");
+    ElementsCollection defaultImgInCards = $$x("//div[@class='no-image-plug ng-star-inserted']/img");
 
     public Tickets addTicketWithClickOnAuthConfirm(int index) {
         addTicketButton.get(index).click();
@@ -58,6 +58,8 @@ public class Tickets {
 
                 Auth.authModalConfirmButton.shouldNotBe(visible);
             }
+
+            infoMessage.shouldBe(visible, Duration.ofSeconds(2)).shouldHave(exactText("Товар добавлен в корзину"));
         }
 
     }
@@ -69,6 +71,9 @@ public class Tickets {
             Auth.authModalInput.sendKeys(email);
             Auth.authModalConfirmButton.click();
         }
+
+        infoMessage.shouldBe(visible, Duration.ofSeconds(2)).shouldHave(exactText("Товар добавлен в корзину"));
+
         return this;
     }
 
@@ -84,9 +89,22 @@ public class Tickets {
         if (Auth.authModalConfirmButton.exists()) {
             Auth.authModalConfirmButton.click();
         }
+
+        infoMessage.shouldBe(visible, Duration.ofSeconds(2)).shouldHave(exactText("Товар добавлен в корзину"));
     }
 
-    public void addTicketFromCategory(int index) {
+    public void addLastTicketFromCategory() {
+        addTicketButton.get(0).click();
+        addTicketsFromCategoryPlusButton.last().click();
+
+        if (Auth.authModalConfirmButton.exists()) {
+            Auth.authModalConfirmButton.click();
+        }
+
+        infoMessage.shouldBe(visible, Duration.ofSeconds(2)).shouldHave(exactText("Товар добавлен в корзину"));
+    }
+
+    public void addTicketFromCategoryByIndex(int index) {
         if (!goodTypeTicketItemInCategory.exists()) {
             addTicketButton.get(0).click();
         }
@@ -96,6 +114,8 @@ public class Tickets {
         if (Auth.authModalConfirmButton.exists()) {
             Auth.authModalConfirmButton.click();
         }
+
+        infoMessage.shouldBe(visible, Duration.ofSeconds(2)).shouldHave(exactText("Товар добавлен в корзину"));
     }
 
     public String getSuccessAddToCartMessage() {
@@ -148,5 +168,21 @@ public class Tickets {
         categoryCloseButton.shouldBe(enabled).click();
 
         return !ticketsCategoryContainer.is(exist);
+    }
+
+    public boolean checkDefaultImgInCards() {
+       defaultImgInCards.shouldHave(CollectionCondition.size(4));
+
+        boolean result = true;
+
+        for (int i = 0; i < defaultImgInCards.size(); i++) {
+            if (!defaultImgInCards.get(i).isImage() && !defaultImgInCards.get(i).has(attribute("src", "https://limepay.chudin.ru/buy/no-picture-background.svg"))) {
+                result = false;
+                System.out.println(result);
+                break;
+            }
+        }
+
+        return result;
     }
 }

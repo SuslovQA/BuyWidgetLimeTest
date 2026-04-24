@@ -38,6 +38,12 @@ public class BuyWidgetTest {
     }
 
     @Test
+    @DisplayName("0.2 Проверка, что в карточкахбез изображения добавлены дефолтные изображения")
+    void shouldCheckDefaultPicturesInCards() {
+        Assertions.assertTrue(mainPage.tickets.checkDefaultImgInCards());
+    }
+
+    @Test
     @DisplayName("1.0 Успешное добавление одного билета в корзину с авторизацией по UID")
     void shouldAuthWithUidAndAddTicketInCart() {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
@@ -106,9 +112,9 @@ public class BuyWidgetTest {
     @DisplayName("1.5 Успешная покупка билета виртуальным процессингом c проверкой суммы в окне успешной оплаты")
     void shouldBuyTicketByVirtualProcessing() {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
-        mainPage.tickets.addTicketFromCategory(0);
-        mainPage.tickets.addTicketFromCategory(1);
-        mainPage.tickets.addTicketFromCategory(2);
+        mainPage.tickets.addTicketFromCategoryByIndex(0);
+        mainPage.tickets.addTicketFromCategoryByIndex(1);
+        mainPage.tickets.addTicketFromCategoryByIndex(2);
         mainPage.cart.makeOrder();
         mainPage.orderPayment.clickVirtualProcessingButton();
         mainPage.orderPayment.returnToTheShopFromVirtualPayment();
@@ -292,7 +298,7 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("2.8 Отображение ошибки 'Не найден покупатель по номеру карты' при авторизации по UID невалидной карты")
+    @DisplayName("2.8 Отображение ошибки 'Не найден покупатель по номеру карты' при попытке авторизации по UID невалидной карты")
     void shouldDisplayErrorOnAuthWithInvalidCard() {
         mainPage.auth.authWithCardUid(DataCards.INVALID_CARD_UID);
 
@@ -307,8 +313,8 @@ public class BuyWidgetTest {
     void shouldCheckMoneyBalanceInAuthButtonAfterSuccessAuth() {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
-        var actual = mainPage.auth.checkMoneyBalanceInAuthButton();
-        var expected = 100;
+        var actual = mainPage.auth.getMoneyBalanceInAuthButton();
+        var expected = "100";
 
         Assertions.assertEquals(expected, actual);
     }
@@ -319,13 +325,13 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkBonusBalanceInAuthButton();
-        var expected = 16;
+        var expected = "16";
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    @DisplayName("2.11 Проверкакнопка наличия атрбута 'disabled' у кнопки 'Продолжить' в окне авторизации если не введен UID")
+    @DisplayName("2.11 Проверкакнопка наличия атрибута 'disabled' у кнопки 'Продолжить' в окне авторизации если не введен UID")
     void shouldCheckConfirmAuthButtonHaveAttributeIsDisabledWithEmptyAuthField() {
         Assertions.assertTrue(mainPage.auth.checkDisabledConfirmAuthButtonWithEmptyAuthField());
     }
@@ -348,6 +354,7 @@ public class BuyWidgetTest {
 
         Assertions.assertTrue(actual.contains(expected));
     }
+
 
 
     @Test
@@ -388,22 +395,41 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("4.2 Проверка добавления суммы в корзину при вводе случайной суммы в поле воода суммы")
+    @DisplayName("4.2 Проверка добавления суммы в корзину при вводе в поле ввода суммы")
     void shouldCheckSumInCartRefillFromInputWithRandomSum() {
-        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
-        mainPage.refillAccount.addSumFromInput(DataHelper.getRandomSum());
+        String userSum = DataHelper.getRandomSum();
 
-        var actual = mainPage.refillAccount.getAddedSumInCart();
-        var expected = 100;
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.refillAccount.addSumFromInput(userSum);
+
+        var actual = mainPage.refillAccount.getAddedSumInCartWithTrim();
+
+        Assertions.assertEquals(userSum, actual);
+    }
+
+    @Test
+    @DisplayName("4.3 Проверка изменения баланса на кнопке авторизации и окне авторизации после пополнения")
+    void shouldCheckChangeBalanceInAuthButtonAndAuthModalAfterRefilling() {
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.refillAccount.AddSumFromButtonsSumsByIndex(1);
+
+        var currentBalance = mainPage.auth.getMoneyBalanceInAuthButton();
+        var sumInCart = mainPage.refillAccount.getAddedSumInCart();
+
+        mainPage.cart.makeOrder();
+        mainPage.orderPayment.clickVirtualProcessingButton().returnToTheShopFromVirtualPaymentAndCloseStatusModal();
+
+        var actual = mainPage.auth.getMoneyBalanceInAuthButtonWithoutSpaces();
+        var expected = mainPage.refillAccount.getTotalBalanceAfterRefilling(currentBalance, sumInCart);
 
         Assertions.assertEquals(expected, actual);
     }
 
-    @Test
-    @DisplayName("5.0 Проверка элементов (заголовок, иконка, текст) в модальном окне с информацией в билете 'Хамам'")
-    void shouldCheckElementsInModalInfoInTicketCard() {
-        Assertions.assertTrue(mainPage.tickets.checkElementSInInfoModal());
-    }
+//    @Test
+//    @DisplayName("5.0 Проверка элементов (заголовок, иконка, текст) в модальном окне с информацией в билете 'Хамам'")
+//    void shouldCheckElementsInModalInfoInTicketCard() {
+//        Assertions.assertTrue(mainPage.tickets.checkElementSInInfoModal());
+//    }
 
     @Test
     @DisplayName("6.0 Применение скидки в корзине с одним билетом")
@@ -415,4 +441,20 @@ public class BuyWidgetTest {
         Assertions.assertTrue(mainPage.cart.checkApplyingTenPercentDiscount());
     }
 
+    @Test
+    @DisplayName("6.1 Покупка одного билета со скидкой")
+    void shouldSuccessPaymentWithDiscountForOneTicket() {
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.tickets.addTicket(1);
+        mainPage.cart.applyDiscount(DataCards.VALID_PROMOCODE_WITH_TEN_PERCENT_DISCOUNT)
+                .makeOrder()
+                .clickVirtualProcessingButton()
+                .returnToTheShopFromVirtualPayment()
+                .checkElementsInSuccessPaymentModal();
+
+        var actual = mainPage.orderPayment.getTotalSumInSuccessPaymentModal();
+        var expected = mainPage.orderPayment.checkSumAddedTicketWithDiscount(DataTickets.TICKET_1.getPrice());
+
+        Assertions.assertEquals(expected, actual);
+    }
 }

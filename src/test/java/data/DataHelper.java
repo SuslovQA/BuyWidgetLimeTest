@@ -12,7 +12,6 @@ public class DataHelper {
     }
 
     public static String getRandomSum() {
-
         return String.valueOf(new Random().nextInt(6_000 - 1) + 1);
     }
 
