@@ -2,8 +2,10 @@ package components;
 
 import com.codeborne.selenide.*;
 
+import java.time.Duration;
 import java.util.List;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Cart {
@@ -29,13 +31,16 @@ public class Cart {
     SelenideElement infoMessage = $x("//div[@class='head ng-star-inserted']");
 
     public String getItemNameInCart() {
-        shopCart.shouldBe(Condition.visible);
+        shopCart.shouldBe(visible);
         shopCartHeader.shouldHave(Condition.text("Корзина"));
 
         return itemsName.get(0).getText();
     }
 
     public List<String> getListOfItemsNamesInCart() {
+        shopCart.shouldBe(visible);
+        itemsName.forEach(x -> x.shouldBe(visible));
+
         return itemsName.texts();
     }
 
@@ -45,8 +50,8 @@ public class Cart {
 
     public void clearCart() {
         clearCart.shouldBe(Condition.text("Очистить все")).click();
-        shopCartHeader.shouldNotBe(Condition.visible);
-        infoMessage.shouldBe(Condition.visible).shouldHave(Condition.text("Корзина очищена"));
+        shopCartHeader.shouldNotBe(visible);
+        infoMessage.shouldBe(visible).shouldHave(Condition.text("Корзина очищена"));
     }
 
     public void removeAllEqualsTicketsInCartByIndex(int indexTicketInCart) {
@@ -55,6 +60,7 @@ public class Cart {
 
     public void removeOneTicketFromCartByIndex(int indexTicketInCart) {
         removeOneTicketMinusButton.get(indexTicketInCart).click();
+        infoMessage.shouldHave(Condition.exactText("Товар удалён"));
     }
 
     public boolean checkRemovingCart() {
@@ -62,7 +68,7 @@ public class Cart {
     }
 
     public boolean checkRemovingTicketFromCartByTicketName(String nameTicket) {
-        shopCart.shouldBe(Condition.visible);
+        shopCart.shouldBe(visible);
 
         return !itemsName.texts().contains(nameTicket);
     }
@@ -74,10 +80,10 @@ public class Cart {
     }
 
     public Cart applyDiscount(String promoCode) {
-        promoHeader.shouldBe(Condition.visible);
+        promoHeader.shouldBe(visible);
         promoInput.sendKeys(promoCode);
         confirmPromo.click();
-        discountSumTitleInTotal.shouldBe(Condition.visible);
+        discountSumTitleInTotal.shouldBe(visible);
 
         return this;
     }

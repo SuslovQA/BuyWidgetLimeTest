@@ -8,7 +8,4 @@ public class DataCards {
     public static final String VALID_PROMOCODE_WITH_TEN_PERCENT_DISCOUNT = "skidka10";
     public static final String DATE_EXPIRES_BONUS = "09.04.2027";
     public static final int AMOUNT_MONEY_BALANCE_IN_CARD_WITH_BALANCE = 100;
-
-    public DataCards() {
-    }
 }

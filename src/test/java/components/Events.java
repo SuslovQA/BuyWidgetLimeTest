@@ -17,18 +17,24 @@ public class Events {
     SelenideElement calendarButton = $x("//input[@class='p-inputtext p-component ng-tns-c2825477640-2 p-datepicker-input p-filled ng-star-inserted']");
     SelenideElement nowDate = $x("//span[@class='p-ripple ng-tns-c2825477640-2 p-datepicker-day p-datepicker-day-selected ng-star-inserted']");
     SelenideElement allEventsButton = $x("//lime-carousel[2]//button[@class='p-ripple p-button p-component p-button-rounded']");
+    SelenideElement datePickerInput = $x("//input[@class='p-inputtext p-component ng-tns-c2825477640-2 p-datepicker-input p-filled ng-star-inserted']");
 
-    public boolean checkCountOfEvents(int sizeOfCollection) {
+    public int getCountOfEvents() {
+        eventsCards.get(0).scrollIntoView(true);
+
         for (SelenideElement eventsCard : eventsCards) {
             eventsCard.shouldBe(Condition.visible);
         }
 
-        return eventsCards.size() == sizeOfCollection;
+        return eventsCards.size();
     }
 
-    public boolean checkNowDate() {
-        calendarButton.click();
-
-        return nowDate.getAttribute("data-date").equals(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-M-dd")));
+    public boolean checkDateInDatePickerInput() {
+        return datePickerInput.getValue()
+                .equals(
+                        LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM"))
+                                + " - "
+                                + LocalDate.now().plusMonths(1).format(DateTimeFormatter.ofPattern("dd.MM"))
+                );
     }
 }

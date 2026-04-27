@@ -83,31 +83,31 @@ public class Auth {
         return authButton.getText();
     }
 
-    public int checkMoneyBalance() {
+    public String checkMoneyBalance() {
         authButton.click();
         accountBalanceHeader.should(Condition.visible);
 
         String[] splitWords = moneyBalance.getText().split(" ");
 
-        return Integer.parseInt(splitWords[0]);
+        return splitWords[0];
     }
 
-    public int checkBonusBalance() {
+    public String checkBonusBalance() {
         authButton.click();
         accountBalanceHeader.should(Condition.visible);
 
         String[] splitWords = bonusBalance.getText().split(" ");
 
-        return Integer.parseInt(splitWords[0]);
+        return splitWords[0];
     }
 
-    public int checkExpirationBonusBalance() {
+    public String checkExpirationBonusBalance() {
         authButton.click();
         accountBalanceHeader.should(Condition.visible);
 
         String[] splitWords = bonusExpiration.getText().split(" ");
 
-        return Integer.parseInt(splitWords[0]);
+        return splitWords[0];
     }
 
     public String checkExpirationDateBonus() {

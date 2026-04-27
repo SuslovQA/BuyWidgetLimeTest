@@ -15,6 +15,15 @@ public class DataHelper {
         return String.valueOf(new Random().nextInt(6_000 - 1) + 1);
     }
 
+    public static String calculateTicketsPrice(double... ticketsPrices) {
+        double ticketsPrice = 0;
+        for (double price : ticketsPrices) {
+            ticketsPrice += price;
+        }
+
+        return String.valueOf(ticketsPrice);
+    }
+
 //    public static boolean isModalDisplayedAfterClick(SelenideElement element, Duration timeout) {
 //        try {
 //            // Пытаемся найти элемент и дождаться его видимости

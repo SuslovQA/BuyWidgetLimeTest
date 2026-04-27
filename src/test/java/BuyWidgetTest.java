@@ -95,8 +95,8 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("1.4 Успешное добавление трех разных билетов в корзину с авторизацией по UID")
     void shouldAddSomeDifferentTicketsToCart() {
-        mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
-        mainPage.tickets.addTicketWithClickOnAuthConfirm(DataTickets.TICKET_1.getIndex())
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.tickets.addTicket(DataTickets.TICKET_1.getIndex())
                 .addTicket(DataTickets.TICKET_2.getIndex())
                 .clickEnabledNavButtonInSwiper()
                 .addTicket(DataTickets.TICKET_3.getIndex());
@@ -111,7 +111,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("1.5 Успешная покупка билета виртуальным процессингом c проверкой суммы в окне успешной оплаты")
     void shouldBuyTicketByVirtualProcessing() {
-        mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
         mainPage.tickets.addTicketFromCategoryByIndex(0);
         mainPage.tickets.addTicketFromCategoryByIndex(1);
         mainPage.tickets.addTicketFromCategoryByIndex(2);
@@ -120,7 +120,11 @@ public class BuyWidgetTest {
         mainPage.orderPayment.returnToTheShopFromVirtualPayment();
 
         var actual = mainPage.orderPayment.getTotalSumInSuccessPaymentModal();
-        var expected = DataTickets.TICKET_1_IN_CATEGORY.getPrice() + DataTickets.TICKET_2_IN_CATEGORY.getPrice() + DataTickets.TICKET_3_IN_CATEGORY.getPrice();
+        var expected = DataHelper.calculateTicketsPrice(
+                DataTickets.TICKET_1_IN_CATEGORY.getPrice(),
+                DataTickets.TICKET_2_IN_CATEGORY.getPrice(),
+                DataTickets.TICKET_3_IN_CATEGORY.getPrice()
+        );
 
         Assertions.assertEquals(expected, actual);
     }
@@ -156,7 +160,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("1.8 Удаление одного билета из корзины с проверкой по количеству")
     void shouldRemoveOneTicketFromCartWithCountCheck() {
-        mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
         mainPage.tickets.addSomeEqualsTickets(DataTickets.TICKET_3_IN_CATEGORY.getIndex(), 3);
         mainPage.cart.removeOneTicketFromCartByIndex(0);
 
@@ -208,6 +212,23 @@ public class BuyWidgetTest {
     }
 
     @Test
+    @DisplayName("1.14 Покупка одного билета со скидкой")
+    void shouldSuccessPaymentWithDiscountForOneTicket() {
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.tickets.addTicket(1);
+        mainPage.cart.applyDiscount(DataCards.VALID_PROMOCODE_WITH_TEN_PERCENT_DISCOUNT)
+                .makeOrder()
+                .clickVirtualProcessingButton()
+                .returnToTheShopFromVirtualPayment()
+                .checkElementsInSuccessPaymentModal();
+
+        var actual = mainPage.orderPayment.getTotalSumInSuccessPaymentModal();
+        var expected = mainPage.orderPayment.checkSumAddedTicketWithDiscount(DataTickets.TICKET_1.getPrice());
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
     @DisplayName("2.0 Успешная авторизация по UID")
     void shouldSuccessAuthWithUid() {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
@@ -224,7 +245,7 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkMoneyBalance();
-        var expected = 100;
+        var expected = "100";
 
         Assertions.assertEquals(expected, actual);
     }
@@ -235,7 +256,7 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_ZERO_BALANCE);
 
         var actual = mainPage.auth.checkMoneyBalance();
-        var expected = 0;
+        var expected = "0";
 
         Assertions.assertEquals(expected, actual);
     }
@@ -246,7 +267,7 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkBonusBalance();
-        var expected = 16;
+        var expected = "16";
 
         Assertions.assertEquals(expected, actual);
     }
@@ -257,7 +278,7 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkExpirationBonusBalance();
-        var expected = 11;
+        var expected = "11";
 
         Assertions.assertEquals(expected, actual);
     }
@@ -331,7 +352,7 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("2.11 Проверкакнопка наличия атрибута 'disabled' у кнопки 'Продолжить' в окне авторизации если не введен UID")
+    @DisplayName("2.11 Проверк наличия атрибута 'disabled' у кнопки 'Продолжить' в окне авторизации если не введен UID")
     void shouldCheckConfirmAuthButtonHaveAttributeIsDisabledWithEmptyAuthField() {
         Assertions.assertTrue(mainPage.auth.checkDisabledConfirmAuthButtonWithEmptyAuthField());
     }
@@ -345,28 +366,42 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.13 Успешная авторизация с другим UID после авторизации и выхода из аккаунта")
     void shouldSuccessAuthWithOtherUidAfterLogout() {
-        mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_WITH_ZERO_BALANCE);
         mainPage.auth.logout();
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.getValueInAuthButton();
+        System.out.println(mainPage.auth.getValueInAuthButton());
         var expected = DataCards.VALID_CARD_WITH_BALANCE;
 
         Assertions.assertTrue(actual.contains(expected));
     }
 
+    @Test
+    @DisplayName("2.14 Проверка совпадения UID в поле ввода в модальном окне выбора процессинга")
+    void shouldCheckUidInOrderPaymentModal() {
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_WITH_ZERO_BALANCE);
+        mainPage.tickets.addTicket(1);
+        mainPage.cart.makeOrder();
 
+        var actual = mainPage.orderPayment.getInputAuthValueInOrderPaymentModal();
+        var expected = DataCards.VALID_CARD_WITH_ZERO_BALANCE;
+
+        Assertions.assertEquals(expected, actual);
+    }
 
     @Test
     @DisplayName("3.0 Проверка количества событий")
     void shouldCheckCountOfEvents() {
-        Assertions.assertTrue(mainPage.events.checkCountOfEvents(3));
+        var actual = mainPage.events.getCountOfEvents();
+        var expected = 3;
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("3.1 Проверка текущей даты в календаре в компоненте 'События'")
     void shouldCheckDateInDatePicker() {
-        Assertions.assertTrue(mainPage.events.checkNowDate());
+        Assertions.assertTrue(mainPage.events.checkDateInDatePickerInput());
     }
 
     @Test
@@ -375,7 +410,7 @@ public class BuyWidgetTest {
         mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
         mainPage.refillAccount.AddSumFromButtonsSumsByIndex(0);
 
-        var actual= mainPage.refillAccount.getAddedSumInCart();
+        var actual = mainPage.refillAccount.getAddedSumInCart();
         var expected = mainPage.refillAccount.getAmountSumsList().get(0);
 
         Assertions.assertEquals(expected, actual);
@@ -425,11 +460,11 @@ public class BuyWidgetTest {
         Assertions.assertEquals(expected, actual);
     }
 
-//    @Test
-//    @DisplayName("5.0 Проверка элементов (заголовок, иконка, текст) в модальном окне с информацией в билете 'Хамам'")
-//    void shouldCheckElementsInModalInfoInTicketCard() {
-//        Assertions.assertTrue(mainPage.tickets.checkElementSInInfoModal());
-//    }
+    @Test
+    @DisplayName("5.0 Проверка элементов (заголовок, иконка, текст) в модальном окне с информацией в билете 'Хамам'")
+    void shouldCheckElementsInModalInfoInTicketCard() {
+        Assertions.assertTrue(mainPage.tickets.checkElementSInInfoModal());
+    }
 
     @Test
     @DisplayName("6.0 Применение скидки в корзине с одним билетом")
@@ -439,22 +474,5 @@ public class BuyWidgetTest {
         mainPage.cart.applyDiscount(DataCards.VALID_PROMOCODE_WITH_TEN_PERCENT_DISCOUNT);
 
         Assertions.assertTrue(mainPage.cart.checkApplyingTenPercentDiscount());
-    }
-
-    @Test
-    @DisplayName("6.1 Покупка одного билета со скидкой")
-    void shouldSuccessPaymentWithDiscountForOneTicket() {
-        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
-        mainPage.tickets.addTicket(1);
-        mainPage.cart.applyDiscount(DataCards.VALID_PROMOCODE_WITH_TEN_PERCENT_DISCOUNT)
-                .makeOrder()
-                .clickVirtualProcessingButton()
-                .returnToTheShopFromVirtualPayment()
-                .checkElementsInSuccessPaymentModal();
-
-        var actual = mainPage.orderPayment.getTotalSumInSuccessPaymentModal();
-        var expected = mainPage.orderPayment.checkSumAddedTicketWithDiscount(DataTickets.TICKET_1.getPrice());
-
-        Assertions.assertEquals(expected, actual);
     }
 }

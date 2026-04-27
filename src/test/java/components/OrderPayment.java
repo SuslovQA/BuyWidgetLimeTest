@@ -24,6 +24,7 @@ public class OrderPayment {
     SelenideElement downloadTicketsButton = $x("//button[@class='download-ticket ng-star-inserted']");
     SelenideElement downloadTicketsImg = $x("//button[@class='download-ticket ng-star-inserted']/img");
     SelenideElement closeStatusPaymentModalButton = $x("//button[@class='close-button ng-star-inserted']");
+    SelenideElement inputAuthValue = $x("//input[@class='p-inputtext p-component auth-input p-filled']");
 
     public void clickCheckboxAgreements() {
         checkboxAgreements.click();
@@ -91,5 +92,10 @@ public class OrderPayment {
 
     public String getTextWithEmailInSuccessPaymentModal() {
         return textWithEmailInSuccessPaymentModal.getText();
+    }
+
+    public String getInputAuthValueInOrderPaymentModal() {
+        inputAuthValue.shouldHave(Condition.attribute("disabled"));
+        return inputAuthValue.getValue();
     }
 }

@@ -32,6 +32,7 @@ public class Tickets {
     SelenideElement eventsHeader = $x("//lime-carousel[2]//h2");
     SelenideElement refillAccountHeader =$x("//h3");
     ElementsCollection defaultImgInCards = $$x("//div[@class='no-image-plug ng-star-inserted']/img");
+    SelenideElement shopCart = $x("//div[@class='shop-cart']//div[@class='p-card p-component']");
 
     public Tickets addTicketWithClickOnAuthConfirm(int index) {
         addTicketButton.get(index).click();
@@ -44,6 +45,7 @@ public class Tickets {
     public Tickets addTicket(int index) {
         addTicketButton.get(index).click();
         infoMessage.shouldBe(visible, Duration.ofSeconds(2)).shouldHave(exactText("Товар добавлен в корзину"));
+        shopCart.shouldBe(visible);
 
         return this;
     }
