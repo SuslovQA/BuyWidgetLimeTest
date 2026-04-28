@@ -80,6 +80,7 @@ public class Auth {
 
     public String getValueInAuthButton() {
         authButton.shouldBe(Condition.enabled);
+
         return authButton.getText();
     }
 

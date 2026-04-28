@@ -1,14 +1,12 @@
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
-import data.DataCards;
-import data.DataEmails;
-import data.DataHelper;
-import data.DataTickets;
+import data.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import components.MainPage;
 
 import static com.codeborne.selenide.Selenide.*;
+import static io.restassured.RestAssured.given;
 
 public class BuyWidgetTest {
     MainPage mainPage;
@@ -58,7 +56,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("1.1 Успешное добавление одного билета из категории билетов с авторизацией по UID")
     void shouldAuthWithUidAndAddTicketFromGroup() {
-        mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
         mainPage.tickets.addFirstTicketFromCategory();
 
         var actual = mainPage.cart.getItemNameInCart();
@@ -231,7 +229,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("2.0 Успешная авторизация по UID")
     void shouldSuccessAuthWithUid() {
-        mainPage.auth.authWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
 
         var actual = mainPage.auth.getValueInAuthButton();
         var expected = DataCards.VALID_CARD_UID;
@@ -245,7 +243,7 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkMoneyBalance();
-        var expected = "100";
+        var expected = DataHelper.getMoneyBalance(DataCards.VALID_CARD_WITH_BALANCE);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -256,7 +254,7 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_ZERO_BALANCE);
 
         var actual = mainPage.auth.checkMoneyBalance();
-        var expected = "0";
+        var expected = DataHelper.getMoneyBalance(DataCards.VALID_CARD_WITH_ZERO_BALANCE);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -267,7 +265,7 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkBonusBalance();
-        var expected = "16";
+        var expected = DataHelper.getBonusBalance(DataCards.VALID_CARD_WITH_BALANCE);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -335,7 +333,7 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.getMoneyBalanceInAuthButton();
-        var expected = "100";
+        var expected = DataHelper.getMoneyBalance(DataCards.VALID_CARD_WITH_BALANCE);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -346,13 +344,13 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.checkBonusBalanceInAuthButton();
-        var expected = "16";
+        var expected = DataHelper.getBonusBalance(DataCards.VALID_CARD_WITH_BALANCE);
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    @DisplayName("2.11 Проверк наличия атрибута 'disabled' у кнопки 'Продолжить' в окне авторизации если не введен UID")
+    @DisplayName("2.11 Проверка наличия атрибута 'disabled' у кнопки 'Продолжить' в окне авторизации если не введен UID")
     void shouldCheckConfirmAuthButtonHaveAttributeIsDisabledWithEmptyAuthField() {
         Assertions.assertTrue(mainPage.auth.checkDisabledConfirmAuthButtonWithEmptyAuthField());
     }
@@ -371,7 +369,6 @@ public class BuyWidgetTest {
         mainPage.auth.authWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
 
         var actual = mainPage.auth.getValueInAuthButton();
-        System.out.println(mainPage.auth.getValueInAuthButton());
         var expected = DataCards.VALID_CARD_WITH_BALANCE;
 
         Assertions.assertTrue(actual.contains(expected));
@@ -402,6 +399,43 @@ public class BuyWidgetTest {
     @DisplayName("3.1 Проверка текущей даты в календаре в компоненте 'События'")
     void shouldCheckDateInDatePicker() {
         Assertions.assertTrue(mainPage.events.checkDateInDatePickerInput());
+    }
+
+    @Test
+    @DisplayName("3.2 Проверка открытия расписания на событие")
+    void shouldOpenEventSchedule() {
+        mainPage.events.openEventScheduleByIndex(DataEvents.EVENT_3.getIndex());
+    }
+
+    @Test
+    @DisplayName("3.3 Проверка отображения элементов при открытии расписания на событие")
+    void shouldCheckElementsInOpenedEventSchedule() {
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_WITH_ZERO_BALANCE);
+        mainPage.events.checkElementsInEventSchedule(DataEvents.EVENT_1.getIndex());
+    }
+
+    @Test
+    @DisplayName("3.4 Добавление одного билета на событие в корзину")
+    void shouldAddEventInCart() {
+        int eventIndex = 0;
+        int ticketIndex = 1;
+
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_WITH_BALANCE);
+        mainPage.events.addEvent(DataEvents.EVENT_1.getIndex(), ticketIndex);
+
+        var actual = mainPage.cart.getItemNameInCart();
+        var expected = mainPage.events.getEventsNames(eventIndex);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("3.5 Покупка билета на мероприятие виртуальным процессингом")
+    void shouldBuyEventTicketByVirtualProcessing() {
+        mainPage.auth.doubleAuthWithCardUid(DataCards.VALID_CARD_UID);
+        mainPage.events.addEvent(DataEvents.EVENT_2.getIndex(), 2).makeOrder();
+        mainPage.orderPayment.clickVirtualProcessingButton().returnToTheShopFromVirtualPayment();
+        mainPage.orderPayment.checkElementsInSuccessPaymentModal();
     }
 
     @Test

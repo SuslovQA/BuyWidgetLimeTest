@@ -1,14 +1,9 @@
 package data;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class DataTickets {
     private int index;
     private String name;
     private double price;
-//    public final DataTickets[] LIST_OF_TICKETS_IN_CATEGORY = {TICKET_1_IN_CATEGORY, TICKET_2_IN_CATEGORY, TICKET_3_IN_CATEGORY, TICKET_4_IN_CATEGORY, TICKET_5_IN_CATEGORY, TICKET_6_IN_CATEGORY, TICKET_7_IN_CATEGORY, TICKET_8_IN_CATEGORY, TICKET_9_IN_CATEGORY, TICKET_10_IN_CATEGORY};
 
 
     public static final DataTickets TICKET_1 = new DataTickets(1, "Аквапарк", 150);

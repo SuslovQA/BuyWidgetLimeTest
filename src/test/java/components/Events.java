@@ -11,13 +11,23 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class Events {
     ElementsCollection eventsCards = $$x("//lime-ticket-purchase-widget/div[@class='lime-container']//lime-carousel[2]//div[@class='swiper swiper-initialized swiper-horizontal swiper-backface-hidden']//p-card");
-    ElementsCollection openEvent = $$x("//lime-carousel[2]//button[@class='p-ripple p-button p-component']");
+    ElementsCollection openEventSchedule = $$x("//lime-carousel[2]//button[@class='p-ripple p-button p-component']");
     ElementsCollection eventsNamesInCards = $$x("//lime-carousel[2]//div[@class='name-string']");
     ElementsCollection eventsPricesInCards = $$x("//lime-carousel[2]//p[@class='lime-full-price']");
     SelenideElement calendarButton = $x("//input[@class='p-inputtext p-component ng-tns-c2825477640-2 p-datepicker-input p-filled ng-star-inserted']");
     SelenideElement nowDate = $x("//span[@class='p-ripple ng-tns-c2825477640-2 p-datepicker-day p-datepicker-day-selected ng-star-inserted']");
     SelenideElement allEventsButton = $x("//lime-carousel[2]//button[@class='p-ripple p-button p-component p-button-rounded']");
     SelenideElement datePickerInput = $x("//input[@class='p-inputtext p-component ng-tns-c2825477640-2 p-datepicker-input p-filled ng-star-inserted']");
+    SelenideElement eventScheduleModal = $x("//div[@class='event-schedule']");
+    ElementsCollection addEventInCartButton = $$x("//lime-event-price-item//img[@limeimg='plus-sign.svg']/parent::button");
+    ElementsCollection availableSeatsInSchedule = $$x("//div[@class='event-time-space-info'][2]/div[1]");
+    ElementsCollection countAddedTicketsInSchedule = $$x("//div[@class='event-schedule-price ng-star-inserted']//div[@class='items-amount']");
+    SelenideElement infoMessage = $x("//div[@class='message-body']/div");
+    SelenideElement cart = $x("//lime-products-list");
+    SelenideElement eventNameHeaderInSchedule = $x("//div[@class='schedule-head']/h2");
+    SelenideElement datePickerInputInSchedule = $x("//div[@class='event-schedule']//input");
+    SelenideElement makeOrderButton = $x("//lime-event-schedule-list//button[@class='p-ripple p-button p-component']");
+    SelenideElement closeScheduleButton = $x("//button[@class='close-button ng-star-inserted']");
 
     public int getCountOfEvents() {
         eventsCards.get(0).scrollIntoView(true);
@@ -29,6 +39,57 @@ public class Events {
         return eventsCards.size();
     }
 
+    public void openEventScheduleByIndex(int eventIndex) {
+        openEventSchedule.get(eventIndex).click();
+        eventScheduleModal.shouldBe(Condition.visible);
+        eventNameHeaderInSchedule.shouldHave(Condition.exactText(eventsNamesInCards.get(eventIndex).getText()));
+    }
+
+    public void checkElementsInEventSchedule(int eventIndex) {
+        String currentDateInDataPicker = datePickerInput.getValue();
+
+        openEventSchedule.get(eventIndex).click();
+        eventScheduleModal.shouldBe(Condition.visible);
+        eventNameHeaderInSchedule.shouldHave(Condition.exactText(getEventsNames(eventIndex)));
+        makeOrderButton.shouldNotBe(Condition.exist);
+        datePickerInputInSchedule.shouldBe(Condition.visible);
+        closeScheduleButton.shouldBe(Condition.enabled);
+        datePickerInputInSchedule.shouldHave(Condition.value(currentDateInDataPicker));
+    }
+
+    public Events addEvent(int eventIndex, int ticketIndex) {
+        openEventSchedule.get(eventIndex).click();
+
+        if (Auth.authModalConfirmButton.exists()) {
+            Auth.authModalConfirmButton.click();
+        }
+
+        int currentAvailableSeatsInSchedule = Integer.parseInt(availableSeatsInSchedule.get(ticketIndex).shouldBe(Condition.visible).getText());
+        int currentCountAddedTickets = Integer.parseInt(countAddedTicketsInSchedule.get(ticketIndex).shouldBe(Condition.visible).getText());
+
+        eventScheduleModal.shouldBe(Condition.visible);
+        addEventInCartButton.get(ticketIndex).click();
+
+        infoMessage.shouldBe(Condition.visible).shouldHave(Condition.exactText("Товар добавлен в корзину"));
+
+        String resul2 = String.valueOf(currentAvailableSeatsInSchedule -1);
+        String result = String.valueOf(currentCountAddedTickets + 1);
+
+        availableSeatsInSchedule.get(ticketIndex)
+                .shouldHave(Condition.text(resul2));
+
+        countAddedTicketsInSchedule.get(ticketIndex)
+                .shouldHave(Condition.text(result));
+
+        cart.shouldBe(Condition.exist);
+
+        return this;
+    }
+
+    public String getEventsNames(int eventIndex) {
+        return eventsNamesInCards.get(eventIndex).getText();
+    }
+
     public boolean checkDateInDatePickerInput() {
         return datePickerInput.getValue()
                 .equals(
@@ -36,5 +97,16 @@ public class Events {
                                 + " - "
                                 + LocalDate.now().plusMonths(1).format(DateTimeFormatter.ofPattern("dd.MM"))
                 );
+    }
+
+    public String getEventNameInSchedule() {
+        eventScheduleModal.shouldBe(Condition.visible);
+
+        return eventNameHeaderInSchedule.getText();
+    }
+
+    public void makeOrder() {
+        makeOrderButton.shouldBe(Condition.enabled).click();
+        cart.shouldBe(Condition.visible);
     }
 }

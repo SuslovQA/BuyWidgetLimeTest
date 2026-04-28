@@ -65,6 +65,7 @@ public class OrderPayment {
         imgStatusOk.shouldBe(Condition.exist);
         downloadTicketsButton.shouldBe(Condition.enabled).shouldHave(Condition.text("Скачать билеты"));
         downloadTicketsImg.shouldBe(Condition.exist);
+
         return this;
     }
 

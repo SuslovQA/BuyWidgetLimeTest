@@ -3,6 +3,8 @@ package components;
 import com.codeborne.selenide.*;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.codeborne.selenide.Condition.visible;
@@ -29,6 +31,8 @@ public class Cart {
     SelenideElement sumTitleInTotal = $x("//div[@class='final-sum']/div[@class='sum-title']");
     SelenideElement sumAmountInTotal = $x("//div[@class='final-sum']/div[@class='sum-amount']");
     SelenideElement infoMessage = $x("//div[@class='head ng-star-inserted']");
+    SelenideElement eventDateInCart =$x("//div[@class='event-data ng-star-inserted']/div[2]");
+    SelenideElement eventTimeInCart =$x("//div[@class='event-data ng-star-inserted']/div[3]");
 
     public String getItemNameInCart() {
         shopCart.shouldBe(visible);
@@ -42,6 +46,18 @@ public class Cart {
         itemsName.forEach(x -> x.shouldBe(visible));
 
         return itemsName.texts();
+    }
+
+    public List<String> getDateAndTimeEventInCart(int ticketIndex) {
+        List<String> dateAndTime = new ArrayList<>();
+
+        eventDateInCart.shouldBe(visible);
+        eventTimeInCart.shouldBe(visible);
+
+        dateAndTime.add(eventDateInCart.getText());
+        dateAndTime.add(eventTimeInCart.getText());
+
+        return dateAndTime;
     }
 
     public int getItemAmountInCart(int index) {
