@@ -145,14 +145,14 @@ public class Tickets {
 
     public boolean checkReturningToMainPageFromAllTicketsAfterClickOnHomeBackButton() {
         homeBackButtonFromAllTickets.click();
-        ticketsInAll.shouldHave(CollectionCondition.size(7));
+        ticketsInAll.shouldHave(CollectionCondition.size(8));
 
         return !homeBackButtonFromAllTickets.exists() && eventsHeader.exists() && refillAccountHeader.exists() && allTicketsButton.isEnabled();
     }
 
     public boolean checkReturningToMainPageFromAllTicketsAfterClickOnLogoInHeader() {
         logoInHeader.click();
-        ticketsInAll.shouldHave(CollectionCondition.size(7));
+        ticketsInAll.shouldHave(CollectionCondition.size(8));
 
         return !homeBackButtonFromAllTickets.exists() && eventsHeader.exists() && refillAccountHeader.exists() && allTicketsButton.isEnabled();
     }
@@ -173,7 +173,7 @@ public class Tickets {
     }
 
     public boolean checkDefaultImgInCards() {
-       defaultImgInCards.shouldHave(CollectionCondition.size(4));
+       defaultImgInCards.shouldHave(CollectionCondition.size(5));
 
         boolean result = true;
 

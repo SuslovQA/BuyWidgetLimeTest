@@ -29,13 +29,8 @@ public class Auth {
 
     public void authWithCardUid(String cardUid) {
         authButton.click();
-
-//        authModal.shouldBe(Condition.exist);
-
         authModalInput.sendKeys(cardUid);
         authModalConfirmButton.click();
-
-//        authModal.shouldNotBe(Condition.exist);
     }
 
     public void doubleAuthWithCardUid(String cardUid) {
@@ -70,8 +65,8 @@ public class Auth {
         return authModalConfirmButton.is(Condition.disabled);
     }
 
-    public String getErrorMessageWithInvalidAuthData() {
-        return errorMessageWithInvalidAuthData.shouldBe(Condition.visible).getText();
+    public boolean getErrorMessageWithInvalidAuthData() {
+        return errorMessageWithInvalidAuthData.has(Condition.visible) && errorMessageWithInvalidAuthData.has(Condition.exactText("Не найден покупатель по номеру карты"));
     }
 
     public String getErrorMessageHeader() {
@@ -82,6 +77,10 @@ public class Auth {
         authButton.shouldBe(Condition.enabled);
 
         return authButton.getText();
+    }
+
+    public boolean checkAuthButtonWithoutAuth() {
+        return authButton.has(Condition.enabled) && authButton.has(Condition.exactText("Уже есть карта?"));
     }
 
     public String checkMoneyBalance() {
@@ -174,6 +173,7 @@ public class Auth {
     public void logout() {
         authButton.click();
         logOutButton.click();
+        authButton.shouldHave(Condition.exactText("Уже есть карта?"));
     }
 
     public boolean checkSourceOfImgInAuthButton() {

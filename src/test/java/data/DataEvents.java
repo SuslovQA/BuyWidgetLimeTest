@@ -1,17 +1,17 @@
 package data;
 
+
 public class DataEvents {
     private int index;
     private String name;
     private double price;
-    private double childSeatTypePrice;
-    private double adultSeatTypePrice;
-    private String time;
+    private double childOrFirstSeatTypePrice;
+    private double adultOrSecondSeatTypePrice;
 
-    public static final DataEvents EVENT_1 = new DataEvents(0, "Веб витр", 500);
-    public static final DataEvents EVENT_2 = new DataEvents(1, "Бассейн", 200);
-    public static final DataEvents EVENT_3 = new DataEvents(2, "Каток", 50, 100);
-    public static final DataEvents TICKET_1_EVENT_1 = new DataEvents(0, null, 500, "13:00 - 14:00");
+    public static final DataEvents EVENT_1 = new DataEvents(0, "Мероприятие 1", 100);
+    public static final DataEvents EVENT_2 = new DataEvents(1, "Мероприятие 2", 400, 500);
+    public static final DataEvents EVENT_3 = new DataEvents(2, "Мероприятие 3", 350);
+    public static final DataEvents EVENT_4 = new DataEvents(2, "Мероприятие 4", 150, 250);
 
     public DataEvents(int index, String name, double price) {
         this.index = index;
@@ -19,18 +19,11 @@ public class DataEvents {
         this.price = price;
     }
 
-    public DataEvents(int index, String name, double childSeatTypePrice, double adultSeatTypePrice) {
+    public DataEvents(int index, String name, double childOrFirstSeatTypePrice, double adultOrSecondSeatTypePrice) {
         this.index = index;
         this.name = name;
-        this.childSeatTypePrice = childSeatTypePrice;
-        this.adultSeatTypePrice = adultSeatTypePrice;
-    }
-
-    public DataEvents(int index, String name, double price, String time) {
-        this.index = index;
-        this.name = name;
-        this.price = price;
-        this.time = time;
+        this.childOrFirstSeatTypePrice = childOrFirstSeatTypePrice;
+        this.adultOrSecondSeatTypePrice = adultOrSecondSeatTypePrice;
     }
 
     public int getIndex() {
@@ -45,11 +38,11 @@ public class DataEvents {
         return price;
     }
 
-    public double getChildSeatTypePrice() {
-        return childSeatTypePrice;
+    public double getChildOrFirstSeatTypePrice() {
+        return childOrFirstSeatTypePrice;
     }
 
-    public double getAdultSeatTypePrice() {
-        return adultSeatTypePrice;
+    public double getAdultOrSecondSeatTypePrice() {
+        return adultOrSecondSeatTypePrice;
     }
 }

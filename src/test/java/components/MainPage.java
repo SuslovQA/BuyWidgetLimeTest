@@ -84,24 +84,27 @@ public class MainPage {
                 .shouldHave(cssValue("background-color", "rgba(255, 155, 84, 1)"));
         progressIndicators.get(1)
                 .shouldBe(enabled)
-                .shouldHave(attribute("style", "width: 100%; left: 0%;"))
+                .shouldHave(attribute("style", "width: 50%; left: 0%;"))
                 .shouldHave(cssValue("background-color", "rgba(255, 155, 84, 1)"));
         enabledNavButtonProgressBar.shouldBe(visible);
-        disabledNavButtonProgressBar.shouldHave(CollectionCondition.size(3));
-        priceOnGoodCards.get(0).shouldHave(text("от 10,22"));
-        priceOnGoodCards.get(1).shouldHave(text("150"));
-        priceOnGoodCards.get(2).shouldHave(text("11"));
-        priceOnEventCards.get(0).shouldHave(text("от 500"));
-        priceOnEventCards.get(1).shouldHave(text("от 200"));
-        priceOnEventCards.get(2).shouldHave(text("от 100"));
+        disabledNavButtonProgressBar.shouldHave(CollectionCondition.size(2));
+        priceOnGoodCards.get(0).shouldHave(text("от 100"));
+        priceOnGoodCards.get(1).shouldHave(text("300"));
+        priceOnGoodCards.get(2).shouldHave(text("999,99"));
+        priceOnGoodCards.get(3).shouldHave(text("855"));
+        priceOnEventCards.get(0).shouldHave(text("от 100"));
+        priceOnEventCards.get(1).shouldHave(text("от 500"));
+        priceOnEventCards.get(2).shouldHave(text("от 350"));
+        priceOnEventCards.get(3).shouldHave(text("от 150"));
         priceOnGoodCards.get(3).shouldNotBe(visible);
+        priceOnEventCards.get(3).shouldNotBe(visible);
         datePickerInput.shouldBe(enabled);
         refillTitle.shouldHave(exactText("Введите сумму пополнения"));
         refillSumAmounts.shouldHave(CollectionCondition.size(4));
         refillSumAmounts.get(0).shouldHave(text("100"));
         refillSumAmounts.get(1).shouldHave(text("200"));
-        refillSumAmounts.get(2).shouldHave(text("500"));
-        refillSumAmounts.get(3).shouldHave(text("1 000"));
+        refillSumAmounts.get(2).shouldHave(text("500,55"));
+        refillSumAmounts.get(3).shouldHave(text("5 000"));
         refillInput.shouldBe(visible, enabled).shouldHave(attribute("placeholder", "Введите сумму"));
         addRefillInCartButton.shouldBe(visible).shouldBe(disabled).shouldHave(exactText("Добавить в корзину"));
         logoInFooter.shouldBe(exist);
@@ -115,17 +118,16 @@ public class MainPage {
         contactsInFooter.get(1).shouldBe(enabled).shouldHave(exactText("88005553535"));
         contactsInFooter.get(2).shouldBe(enabled).shouldHave(exactText("see@lime-it.ru"));
         datePicker.shouldBe(exist);
-        imgInItemCard.get(0).shouldBe(exist).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/147816/GoodType/Image/2C2007A8A538720BB70149D0261E0BFC.png"));
-        imgInItemCard.get(1).shouldBe(exist).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/147816/Service/Image/AB9DBAE53EB6EA5183040E0605F1AA8D.png"));
-        imgInItemCard.get(2).shouldBe(exist).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/147816/Service/Image/7A322EB795C2A59DE8827D29021A7DF4.png"));
-        namesOfGoods.get(0).shouldHave(exactText("Много билетов"));
-        namesOfGoods.get(1).shouldHave(exactText("Аквапарк"));
-        namesOfGoods.get(2).shouldHave(exactText("Хамам"));
-        namesOfGoods.get(3).shouldNotBe(visible);
+        imgInItemCard.get(0).shouldBe(exist).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/156920/GoodTypeTree/Image/42E22A5BBA5B6F90A26786BE9496ED77.png"));
+        namesOfGoods.get(0).shouldHave(exactText("Категория билетов"));
+        namesOfGoods.get(1).shouldHave(exactText("Билет без категории 1"));
+        namesOfGoods.get(2).shouldHave(exactText("5 Билетов"));
+        namesOfGoods.get(3).shouldNotBe(visible).shouldHave(exactText("Пакет для витрины"));
         namesOfGoods.shouldHave(CollectionCondition.size(4));
-        namesOfEvents.get(0).shouldHave(exactText("Веб витр"));
-        namesOfEvents.get(1).shouldHave(exactText("Бассейн"));
-        namesOfEvents.get(2).shouldHave(exactText("Каток"));
+        namesOfEvents.get(0).shouldHave(exactText("Мероприятие 1"));
+        namesOfEvents.get(1).shouldHave(exactText("Мероприятие 2"));
+        namesOfEvents.get(2).shouldHave(exactText("Мероприятие 3 для витрины"));
+        namesOfEvents.get(2).shouldNotBe(visible).shouldHave(exactText("Мероприятие 4"));
         addTicketButtonsInCards.shouldHave(CollectionCondition.size(4))
                 .forEach(x -> x.shouldHave(cssValue("background-color", "rgba(255, 155, 84, 1)")));
         addEventsButtonsInCards.shouldHave(CollectionCondition.size(3))
@@ -136,7 +138,7 @@ public class MainPage {
         allEventsButtonText.shouldHave(exactText("Все события"));
         infoButtonsInCards.shouldHave(CollectionCondition.size(3))
                 .forEach(x -> x.shouldBe(enabled).shouldHave(attribute("src", "https://limepay.chudin.ru/buy/prompt.svg")));
-        imgInEventsCard.get(0).shouldBe(visible).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/147816/Service/Image/AB9DBAE53EB6EA5183040E0605F1AA8D.png"));
-        imgInEventsCard.get(1).shouldBe(visible).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/147816/Service/Image/7A322EB795C2A59DE8827D29021A7DF4.png"));
+        imgInEventsCard.get(0).shouldBe(exist).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/156920/Service/Image/D759024D6D0C3587F86E8CFECEB9199D.webp"));
+        imgInEventsCard.get(1).shouldBe(exist).shouldHave(attribute("src", "https://limepay.chudin.ru/api/File/Image/156920/Service/Image/E4F050F3E9A18172BFB1C3DD6430A905.webp"));
     }
 }
