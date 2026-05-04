@@ -17,7 +17,7 @@ public class Auth {
     SelenideElement authButton = $x("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']");
     SelenideElement authModal = $x("//div[@class='modal-overlay']");
     SelenideElement errorMessageHeader = $x("//div[@class='head ng-star-inserted']");
-    SelenideElement errorMessageWithInvalidAuthData = $(By.xpath("//div[@class='message-body']//div[@class='description ng-star-inserted']"));
+    SelenideElement errorMessageWithInvalidAuthData = $x("//div[@class='message-body']//div[@class='description ng-star-inserted']");
     SelenideElement accountBalanceHeader = $x("//div[@class='account-balance']/h4");
     SelenideElement moneyBalance = $x("//div[@class='balance-data ng-star-inserted']/div[1]");
     SelenideElement bonusBalance = $x("//div[@class='balance-data ng-star-inserted']/div[2]");
@@ -66,7 +66,8 @@ public class Auth {
     }
 
     public boolean getErrorMessageWithInvalidAuthData() {
-        return errorMessageWithInvalidAuthData.has(Condition.visible) && errorMessageWithInvalidAuthData.has(Condition.exactText("Не найден покупатель по номеру карты"));
+        errorMessageWithInvalidAuthData.shouldBe(Condition.visible);
+        return errorMessageWithInvalidAuthData.has(Condition.exactText("Не найден покупатель по номеру карты "));
     }
 
     public String getErrorMessageHeader() {

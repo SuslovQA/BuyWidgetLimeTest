@@ -1,6 +1,9 @@
 package data;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DataEvents {
     private int index;
     private String name;

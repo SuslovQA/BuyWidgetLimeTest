@@ -25,7 +25,7 @@ public class DataCards {
     }
 
     public DataCards(String uid) {
-        uid = uid;
+        this.uid = uid;
     }
 
     public DataCards(String uid, String category) {

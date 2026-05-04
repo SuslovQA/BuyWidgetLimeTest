@@ -1,11 +1,16 @@
 package data;
 
 
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static io.restassured.RestAssured.given;
 
@@ -107,5 +112,21 @@ public class DataHelper {
                 .extract().path("rights.right.amount");
 
         return Integer.toString(response.get(2) / 100);
+    }
+
+    public static List<SelenideElement> getEvenElements(ElementsCollection elementsCollection) {
+        List<SelenideElement> elements = IntStream.range(0, elementsCollection.size())
+                .filter(i -> i % 2 == 0)
+                .mapToObj(elementsCollection::get)
+                .collect(Collectors.toList());
+        return elements;
+    }
+
+    public static List<SelenideElement> getOddElements(ElementsCollection elementsCollection) {
+        List<SelenideElement> elements = IntStream.range(0, elementsCollection.size())
+                .filter(i -> i % 2 != 0)
+                .mapToObj(elementsCollection::get)
+                .collect(Collectors.toList());
+        return elements;
     }
 }

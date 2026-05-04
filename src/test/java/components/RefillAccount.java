@@ -3,6 +3,7 @@ package components;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import data.DataHelper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ public class RefillAccount {
     SelenideElement refillAccountHeader = $x("//lime-refill-sums//h3");
     SelenideElement refillAccountSubTitle = $x("//lime-refill-sums//p");
     ElementsCollection buttonsOfSumsList = $$x("//div[@class='amounts-list ng-star-inserted']/button");
-    ElementsCollection amountSumsList = $$x("//div[@class='amounts-list ng-star-inserted']/button/div");
+    ElementsCollection amountSumsList = $$x("//div[@class='amounts-list ng-star-inserted']/button/div[@class='sum-amount']");
     SelenideElement sumInCart = $x("//div[@class='base-price']");
     SelenideElement sumInput = $x("//input[@class='p-inputtext p-component p-inputnumber-input']");
     SelenideElement addSumInCartButton = $x("//div[@class='refill-controller']//button");
@@ -40,11 +41,11 @@ public class RefillAccount {
             Auth.authModalConfirmButton.shouldNotBe(visible);
         }
 
-        sumInCart.shouldBe(Condition.exactText(amountSumsList.get(sumButtonIndex).getText()));
+        sumInCart.shouldBe(Condition.exactText(DataHelper.replaceUnicodeSpaceCharacterToSpace(amountSumsList.get(sumButtonIndex).getText())));
     }
 
     public String getAddedSumInCart() {
-        return sumInCart.getText();
+        return DataHelper.replaceUnicodeSpaceCharacterToSpace(sumInCart.getText());
     }
 
     public String getAddedSumInCartWithTrim() {

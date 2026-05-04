@@ -32,7 +32,7 @@ public class MainPage {
     SelenideElement logoInFooter = $x("//div[@class='footer-container']//div[@class='logo-block']/img");
     ElementsCollection aboutUsInFooter = $$x("//div[@class='footer-container']//div[@class='about-us']/div[@class='ng-star-inserted']");
     SelenideElement qr = $x("//div[@class='qr-code']/img");
-    String qrSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAYAAAB1PADUAAAH90lEQVR4AeyW0XIbOwxDfe7//3Nukz7URFKxNKX1rhadxmOYJEiBmJH++/A/KzBRgf8e/mcFJipgQ00U01SPhw1lF0xVwIaaKqfJbCh7YKoCNtRUOTcie/EoNtSLwrnsZwVsqJ918a8vKmBDvSicy35WwIb6WRf/+qICNtSLwrnsZwVsqJ918a8vKmBDvSjcdcqOndSGOlbv7bvZUNuv+NgDtg0FPOC4P5UHYu9qvJoPtX4Q8yFi7a8YYj6sxdq/ituGqjZ0/t4K2FB77/fw09lQh0u+d8Pphvr4+HjM/OvKr7PA+A2S9VM+za/GIc6jfE/466vyd/EX6cSP6YaaOJupLqiADXXBpZ15ZBvqzNu54GzLDQXxjQBjXNVQ3xAw5tf8DGfzQOyn+cqv8S6G2B/GuNsvq19uqGwAx/dSwIbaa59vP40N9YYV7Nzy8oaC+GbIlgUxHyLWeohxiDjLz+Kr31jafzW+vKFWC2T+mgI2VE0vZycK2FCJQA7XFLi8ofQN0sWZfBm/1sP4zaX5V8eXN9TVF7Db/DZUZ6Ou/aaADfVNEv/QUWC5obI3h8Y7h3mlFuIbByLO5oOYrzN065VPsfJnWOtn4+WGmj2w+c6tgA117v1cbjob6nIrO/fA0w0F8U0BPZzJB5Ff82Ec13x9g8DceuXX/hmGOA/0cNavGp9uqOoA58j3FLMUsKFmKWmeLwVsqC8Z/DFLgbah9E2wGmcHh/im0Hmyeo1rPYz5YRxX/gxr/9U4myeLtw2VNXD8XgrYUPfa9/LT2lDLJb5Xg7ahIL4ZVD6IcYi4mg+xXt4USvcNw7geYlwJtB+M82EcVz7tB+P6aj5EPohY+aq4bahqQ+fvrYANtfd+Dz+dDXW45Hs3XG4ofSMohniHazzDMK6HWlzXDbEeItb86rww5lN+iPkQsfbX+iyu+VW83FDVgZx/bQVsqGvv73TTn9ZQp1PKA/2TAm1DZXcyxDv+n6Z6SoJevc4HkU/jT62/vmbxr6SnD4j8EHGVT/Mz/DTK11eI/SFi5fsqany0DdXo7dINFbChNlzqO49kQ71T/Q17tw0F8U5WjfSOhpjfjWs/xRD7aVyxzjM7DrV5IOZDxDqfYj2PYqjxKb/itqGU0PjeCqw31L31vd3pbajbrXztgduG0jtZx4V4R2s+9OLKp/0Vaz7E/poPMQ4RZ/ka1/6Ku/kQ54OIM36NV3HbUNWGzt9bARtq7/0efjob6nDJ927YNhTEOxoirr4RoFav64FxPYzjyqdYz1PFEPsrv2Ko5es8GR/U+JVPccFQWmpsBb4rYEN918S/NBSwoRriufS7AqczlL4BIN7xMMZZvUoANb5qPUT+rF7jimHMp/lH49MZ6mgB3G+uAjbUXD1vz2ZD3d4CfQGeGaYb6ug3zPNhfvqu8yjWGo1DfLNAxJpfxdpfsfJpPMNZfRbP+DU+3VDawPheCthQ99r38tPaUMslvleD6YaC+MZQOSHGszscYr7yHY11XhjPB+N4lU/PC5EfItb81Xi6oVYPbP5zK2BDnXs/x043oZsNNUFEU/xRoG0ofQP8of79TeOKf2f9/bOar0wQ3xQQsebPxtn80JtnNX9Vj7ahqg2dv7cCNtTe+z38dDbU4ZLv3bBtKIhvgOqdDuN6iHFdR9YviysfjPtBLQ7j/Gw+GNdDjGd8WVz1qOK2oaoNnX+EAu/rYUO9T/stO9tQW671fYdqGyq7k2F8x2f1GlcMkT+TUusVZ/XVeMYP4/mz+uo8q/Pbhlo9oPmvpYANda19nX5aG+r0K7rWgNMNBfFNkL0BIObDGKu8yg+1eoj5yt/F0OJ/QK0eavnd82n9dENpA+N7KWBD3Wvfy09rQy2X+F4NphtK3zSZnJqfYeWD+GbQes3PsNbPxrP7Z3wah6gXRKz5VTzdUNUBnL+XAjbUXvt8+2lsqINWcJc2bUNBvINhLa4uRt9AEOfTuPJDzM/iEPNhjJVPMcR6jWc4O18Wz/g13jaUEhrfWwEb6t77n356G2q6pPcmnG4ovZO7uLoeiG8OiDjjg3E+jON6Xu2Xxbv5Wq9Y+8P4PFqf4emGyho6vrcCNlR1v84fKmBDDeVxsKrAckNBvKNhjKsH0DeB1mfxLD+r1zjE82lc+ymGWA9jrPXaD8b1mq98VbzcUNWBnH9tBWyoa+/vdNPbUKdbybUHuryhIL4R9E0AtTjE/Op6s/4Q+TU/w9k8UOOHmJ/xZ/HLGyo74N/jjqxQwIZaoeqNOW2oGy9/xdG3MxTEN4G+SWAcV5Ghlq/12l/jXaz8iiHO3+2X1W9nqOzAjq9VwIZaq+/t2G2o26187YGXG0rv9AxXj/vx8fF45tR6iG+I59zP7xDjWp9hqNV/9nz+g3E9xPhz7ed3iHGI+DPn+Q/G8ey8WXy5obIBHN9LARtqr32+/TQ21NtXsNcA0w0F8Y6GHs7khsiv+c/vh8/vGlf8mTP6g9hPc5VPMcR6jXdxdZ5uP62fbihtYHwvBWyoe+17+WlPZajlp3WD5Qq0DaV39mqsimT9NF+x1mtccTU/q8/4uvGsv8a7uG2o7gCu30sBG2qvfb79NDbU21ew1wA21F77fPtpbKi3r2CvAdYYai+NfJqCAjZUQSyn5grYULlGzigoYEMVxHJqroANlWvkjIICNlRBLKfmCthQuUbOKCiQGKrA5FQr8EsBG+qXCP4/TwEbap6WZno8Hv8DAAD//5UNI0sAAAAGSURBVAMAGDoXnPYJL6EAAAAASUVORK5CYII=";
+    String qrSrc = "data:image/png;base64,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";
     SelenideElement qrTitle = $x("//div[@class='qr-code']/div");
     ElementsCollection headersContactsInFooter = $$x("//div[@class='contacts ng-star-inserted']/div");
     ElementsCollection contactsInFooter = $$x("//div[@class='contacts ng-star-inserted']//a");
@@ -91,12 +91,10 @@ public class MainPage {
         priceOnGoodCards.get(0).shouldHave(text("от 100"));
         priceOnGoodCards.get(1).shouldHave(text("300"));
         priceOnGoodCards.get(2).shouldHave(text("999,99"));
-        priceOnGoodCards.get(3).shouldHave(text("855"));
+        priceOnGoodCards.get(3).shouldNotBe(visible);
         priceOnEventCards.get(0).shouldHave(text("от 100"));
         priceOnEventCards.get(1).shouldHave(text("от 500"));
         priceOnEventCards.get(2).shouldHave(text("от 350"));
-        priceOnEventCards.get(3).shouldHave(text("от 150"));
-        priceOnGoodCards.get(3).shouldNotBe(visible);
         priceOnEventCards.get(3).shouldNotBe(visible);
         datePickerInput.shouldBe(enabled);
         refillTitle.shouldHave(exactText("Введите сумму пополнения"));
@@ -109,7 +107,7 @@ public class MainPage {
         addRefillInCartButton.shouldBe(visible).shouldBe(disabled).shouldHave(exactText("Добавить в корзину"));
         logoInFooter.shouldBe(exist);
         aboutUsInFooter.get(0).shouldHave(exactText("Улица Розы Люксембург 64, офис 406"));
-        aboutUsInFooter.get(1).shouldHave(exactText("Пн - Пт с 9 до 18, Сб и Вс - выходные"));
+        aboutUsInFooter.get(1).shouldHave(exactText("Пн - Пт с 8 до 17, Сб и Вс - выходные"));
         qr.shouldBe(exist).shouldHave(attribute("src", qrSrc));
         qrTitle.shouldHave(exactText("QR-код мобильная версия"));
         headersContactsInFooter.get(0).shouldHave(exactText("У Вас возникли затруднения?"));
@@ -122,15 +120,13 @@ public class MainPage {
         namesOfGoods.get(0).shouldHave(exactText("Категория билетов"));
         namesOfGoods.get(1).shouldHave(exactText("Билет без категории 1"));
         namesOfGoods.get(2).shouldHave(exactText("5 Билетов"));
-        namesOfGoods.get(3).shouldNotBe(visible).shouldHave(exactText("Пакет для витрины"));
         namesOfGoods.shouldHave(CollectionCondition.size(4));
         namesOfEvents.get(0).shouldHave(exactText("Мероприятие 1"));
         namesOfEvents.get(1).shouldHave(exactText("Мероприятие 2"));
         namesOfEvents.get(2).shouldHave(exactText("Мероприятие 3 для витрины"));
-        namesOfEvents.get(2).shouldNotBe(visible).shouldHave(exactText("Мероприятие 4"));
         addTicketButtonsInCards.shouldHave(CollectionCondition.size(4))
                 .forEach(x -> x.shouldHave(cssValue("background-color", "rgba(255, 155, 84, 1)")));
-        addEventsButtonsInCards.shouldHave(CollectionCondition.size(3))
+        addEventsButtonsInCards.shouldHave(CollectionCondition.size(4))
                 .forEach(x -> x.shouldHave(cssValue("background-color", "rgba(255, 155, 84, 1)")));
         allTicketsButton.shouldBe(enabled).shouldHave(cssValue("background-color", "rgba(255, 155, 84, 1)"));
         allTicketsButtonText.shouldHave(exactText("Все билеты"));
