@@ -2,6 +2,7 @@ package components;
 
 import com.codeborne.selenide.*;
 import data.DataHelper;
+import data.DataTickets;
 
 import java.time.Duration;
 
@@ -185,6 +186,26 @@ public class Tickets {
             }
         }
 
+        return result;
+    }
+
+    public boolean checkTicketsNamesInCategory() {
+        int count = 1;
+        boolean result = true;
+
+        ticketsCategoryContainer.shouldNot(exist);
+        addTicketButton.get(0).click();
+        ticketsNamesInCategory.shouldHave(CollectionCondition.size(10));
+
+        for (SelenideElement element : ticketsNamesInCategory) {
+
+            if (element.has(exactText("Билет " + count))) {
+                count ++;
+            } else {
+                result = false;
+                break;
+            }
+        }
         return result;
     }
 }

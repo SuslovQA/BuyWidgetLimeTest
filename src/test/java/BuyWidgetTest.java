@@ -47,6 +47,12 @@ public class BuyWidgetTest {
     }
 
     @Test
+    @DisplayName("0.3 Проверка названий билетов добавленных в категорию билетов")
+    void shouldCheckTicketsNamesInCategory() {
+        Assertions.assertTrue(mainPage.tickets.checkTicketsNamesInCategory());
+    }
+
+    @Test
     @DisplayName("1.0 Успешное добавление одного билета в корзину с авторизацией по UID")
     void shouldAuthWithUidAndAddTicketInCart() {
         mainPage.auth.authWithCardUid(VALID_CARD_UID.getUid());
@@ -455,14 +461,14 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("3.7 Проверка цены в карточке события")
     void shouldCheckMinTicketPrice() {
-      Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_1.getIndex()));
-      Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_2.getIndex()));
-      Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_3.getIndex()));
-      Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_4.getIndex()));
+        Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_1.getIndex()));
+        Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_2.getIndex()));
+        Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_3.getIndex()));
+        Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_4.getIndex()));
     }
 
     @Test
-    @DisplayName("4.0 Проверка добавления сумму в корзину по нажатию кнопки 'Выбора суммы'")
+    @DisplayName("4.0 Проверка добавления суммы в корзину по нажатию кнопки 'Выбора суммы'")
     void shouldCheckSumInCartAfterRefillFromSumButtons() {
         mainPage.auth.doubleAuthWithCardUid(VALID_CARD_UID.getUid());
         mainPage.refillAccount.AddSumFromButtonsSumsByIndex(0);
@@ -515,6 +521,14 @@ public class BuyWidgetTest {
         var expected = mainPage.refillAccount.getTotalBalanceAfterRefilling(currentBalance, sumInCart);
 
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("4.4 Проверка отображения бонусов на кнопках пополнения сумм для взрослой категории")
+    void shouldCheckBonusAmountInRefillsButtons() {
+        mainPage.auth.doubleAuthWithCardUid(VALID_CARD_UID.getUid());
+
+        Assertions.assertTrue(mainPage.refillAccount.checkBonusAmountInSumButtons(VALID_CARD_UID));
     }
 
     @Test

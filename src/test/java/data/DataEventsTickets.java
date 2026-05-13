@@ -1,5 +1,10 @@
 package data;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static data.DataEvents.EVENT_1;
+
 public class DataEventsTickets extends BaseTicket {
 //    private String secondName;
 //    private double childOrFirstSeatTypePrice;

@@ -93,7 +93,7 @@ public class MainPage {
         priceOnGoodCards.get(2).shouldHave(text("999,99"));
         priceOnGoodCards.get(3).shouldNotBe(visible);
         priceOnEventCards.get(0).shouldHave(text("от 100"));
-        priceOnEventCards.get(1).shouldHave(text("от 500"));
+        priceOnEventCards.get(1).shouldHave(text("от 400"));
         priceOnEventCards.get(2).shouldHave(text("от 350"));
         priceOnEventCards.get(3).shouldNotBe(visible);
         datePickerInput.shouldBe(enabled);

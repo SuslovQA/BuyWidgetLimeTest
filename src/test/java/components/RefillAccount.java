@@ -1,13 +1,16 @@
 package components;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import data.DataCards;
 import data.DataHelper;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -19,6 +22,8 @@ public class RefillAccount {
     SelenideElement sumInCart = $x("//div[@class='base-price']");
     SelenideElement sumInput = $x("//input[@class='p-inputtext p-component p-inputnumber-input']");
     SelenideElement addSumInCartButton = $x("//div[@class='refill-controller']//button");
+    ElementsCollection bonusAmountInSumButton = $$x("//div[@class='bonus-sum ng-star-inserted']");
+    ElementsCollection bonusIconInSumButton = $$x("//*[local-name()='svg' and @height='20']");
 
     public String getRefillAccountHeader() {
         return refillAccountHeader.getText();
@@ -78,5 +83,20 @@ public class RefillAccount {
         int result1 = Integer.parseInt(result) + Integer.parseInt(splitAddedSum[0]);
 
         return String.valueOf(result1);
+    }
+
+    public boolean checkBonusAmountInSumButtons(DataCards card) {
+        if (card.getCategory().equals(DataCards.VALID_CARD_UID.getCategory())) {
+            bonusAmountInSumButton.get(0).shouldHave(exactText("+ 20 бонусов"));
+            bonusIconInSumButton.get(0).shouldBe(visible);
+            return true;
+        } else if (card.getCategory().equals(DataCards.VALID_CHILD_CARD_UID.getCategory())) {
+            bonusAmountInSumButton.shouldHave(CollectionCondition.size(2));
+            bonusAmountInSumButton.get(0).shouldHave(exactText("+ 20 бонусов"));
+            bonusAmountInSumButton.get(1).shouldHave(exactText("+ 5 бонусов"));
+            bonusIconInSumButton.get(0).shouldBe(visible);
+            bonusIconInSumButton.get(1).shouldBe(visible);
+            return true;
+        } else return false;
     }
 }

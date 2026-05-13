@@ -15,7 +15,7 @@ public class Auth {
     static SelenideElement authModalConfirmButton = $x("//div[@class='confirm-button-container']//button");
     SelenideElement imgInAuthIconContainer = $x("//div[@class='icon-container']/img");
     SelenideElement authButton = $x("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']");
-    SelenideElement authModal = $x("//div[@class='modal-overlay']");
+    static SelenideElement authModal = $x("//div[@class='modal-overlay']");
     SelenideElement errorMessageHeader = $x("//div[@class='head ng-star-inserted']");
     SelenideElement errorMessageWithInvalidAuthData = $x("//div[@class='message-body']//div[@class='description ng-star-inserted']");
     SelenideElement accountBalanceHeader = $x("//div[@class='account-balance']/h4");
@@ -25,7 +25,7 @@ public class Auth {
     SelenideElement balanceInAuthButton = $x("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']");
     SelenideElement refillAccountButton = $x("//div[@class='account-balance']//button[@class='p-ripple p-button p-component']");
     SelenideElement logOutButton = $x("//div[@class='account-balance']//button[@class='p-ripple p-button p-component p-button-outlined']");
-    SelenideElement addFirstTicketTicket = $$x("//button[@class='p-ripple p-button p-component']").get(1);
+    static SelenideElement addFirstTicketTicket = $$x("//button[@class='p-ripple p-button p-component']").get(1);
 
     public void authWithCardUid(String cardUid) {
         authButton.click();

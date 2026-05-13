@@ -1,5 +1,8 @@
 package data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DataTickets extends BaseTicket{
     public static final DataTickets TICKET_1 = new DataTickets(1, "Билет без категории 1", 300);
     public static final DataTickets TICKET_2 = new DataTickets(2, "5 Билетов", 999.99);

@@ -4,8 +4,10 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import data.DataEvents;
+import data.DataEventsTickets;
 import data.DataHelper;
 
+import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -159,18 +161,19 @@ public class Events {
     }
 
     public boolean checkMinEventsTicketsPrices(int eventIndex) {
-        String[] splitElements = eventsPricesInCards.get(eventIndex).getText().split(" ");
-        String elem = Double.valueOf(splitElements[1]).toString();
+        if (eventIndex > 2) {
+            enabledNavButtonInSwiper.click();
+        }
+        String[] splittedElements = eventsPricesInCards.get(eventIndex).getText().split(" ");
+        String element = splittedElements[1] + ".0";
 
         Map<Integer, Double> eventsAndPrices = new HashMap<>();
-        eventsAndPrices.put(DataEvents.EVENT_1.getIndex(), DataEvents.EVENT_1.getPrice());
-        eventsAndPrices.put(DataEvents.EVENT_2.getIndex(), DataEvents.EVENT_2.getChildOrFirstSeatTypePrice());
-        eventsAndPrices.put(DataEvents.EVENT_3.getIndex(), DataEvents.EVENT_3.getPrice());
+        eventsAndPrices.put(DataEvents.EVENT_1.getIndex(), DataEventsTickets.EVENT_1_TICKET.getPrice());
+        eventsAndPrices.put(DataEvents.EVENT_2.getIndex(), DataEventsTickets.EVENT_2_TICKET_CHILD.getPrice());
+
+        eventsAndPrices.put(DataEvents.EVENT_3.getIndex(), DataEventsTickets.EVENT_3_TICKET.getPrice());
         eventsAndPrices.put(DataEvents.EVENT_4.getIndex(), DataEvents.EVENT_4.getChildOrFirstSeatTypePrice());
 
-        System.out.println(eventsAndPrices.get(eventIndex).toString());
-        System.out.println(elem);
-
-       return eventsAndPrices.get(eventIndex).toString().equals(elem);
+       return eventsAndPrices.get(eventIndex).toString().equals(element);
     }
 }

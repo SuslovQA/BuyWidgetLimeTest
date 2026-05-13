@@ -14,7 +14,7 @@ public class DataEvents {
     public static final DataEvents EVENT_1 = new DataEvents(0, "Мероприятие 1", 100);
     public static final DataEvents EVENT_2 = new DataEvents(1, "Мероприятие 2", 400, 500);
     public static final DataEvents EVENT_3 = new DataEvents(2, "Мероприятие 3", 350);
-    public static final DataEvents EVENT_4 = new DataEvents(2, "Мероприятие 4", 150, 250);
+    public static final DataEvents EVENT_4 = new DataEvents(3, "Мероприятие 4", 150, 250);
 
     public DataEvents(int index, String name, double price) {
         this.index = index;
