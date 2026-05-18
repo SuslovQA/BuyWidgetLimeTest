@@ -401,7 +401,7 @@ public class BuyWidgetTest {
     }
 
     @Test
-    @DisplayName("3.1 Проверка текущей даты в календаре в компоненте 'События'")
+    @DisplayName("3.1 Проверка интервала дат по умолчанию в календаре в компоненте 'События'")
     void shouldCheckDateInDatePicker() {
         Assertions.assertTrue(mainPage.events.checkDateInDatePickerInput());
     }
@@ -461,10 +461,28 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("3.7 Проверка цены в карточке события")
     void shouldCheckMinTicketPrice() {
-        Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_1.getIndex()));
-        Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_2.getIndex()));
-        Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_3.getIndex()));
-        Assertions.assertTrue(mainPage.events.checkMinEventsTicketsPrices(EVENT_4.getIndex()));
+        Assertions.assertTrue(mainPage.events.checkMinPricesEventsTicketsInCard(EVENT_1.getIndex()));
+        Assertions.assertTrue(mainPage.events.checkMinPricesEventsTicketsInCard(EVENT_2.getIndex()));
+        Assertions.assertTrue(mainPage.events.checkMinPricesEventsTicketsInCard(EVENT_3.getIndex()));
+        Assertions.assertTrue(mainPage.events.checkMinPricesEventsTicketsInCard(EVENT_4.getIndex()));
+    }
+
+    @Test
+    @DisplayName("3.8 Открытие всех событий после нажатия кнопки 'Все события'")
+    void shouldCheckOpeningAllEvents() {
+        Assertions.assertTrue(mainPage.events.checkEventsAfterClickOnAll());
+    }
+
+    @Test
+    @DisplayName("3.9 Возврат на главную страницу после открытия всех событий по нажатию на кнопку 'home-back'(стрелка)")
+    void shouldReturnBackToMainPageFromAllEventsAfterClickHomeBackButton() {
+        Assertions.assertTrue(mainPage.events.checkReturningToMainPageFromAllEventsAfterClickOnHomeBackButton());
+    }
+
+    @Test
+    @DisplayName("3.10 Возврат на главную страницу после открытия всех событий по нажатию на лого в хэдере")
+    void shouldReturnBackToMainPageFromAllEventsAfterClickLogoInHeader() {
+        Assertions.assertTrue(mainPage.tickets.checkReturningToMainPageFromAllTicketsAfterClickOnLogoInHeader());
     }
 
     @Test

@@ -190,7 +190,7 @@ public class Tickets {
     }
 
     public boolean checkTicketsNamesInCategory() {
-        int count = 1;
+        int nameNumber = 1;
         boolean result = true;
 
         ticketsCategoryContainer.shouldNot(exist);
@@ -199,8 +199,8 @@ public class Tickets {
 
         for (SelenideElement element : ticketsNamesInCategory) {
 
-            if (element.has(exactText("Билет " + count))) {
-                count ++;
+            if (element.has(exactText("Билет " + nameNumber))) {
+                nameNumber++;
             } else {
                 result = false;
                 break;

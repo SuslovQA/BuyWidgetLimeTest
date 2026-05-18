@@ -1,5 +1,6 @@
 package components;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -7,7 +8,6 @@ import data.DataEvents;
 import data.DataEventsTickets;
 import data.DataHelper;
 
-import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -20,10 +20,9 @@ public class Events {
     ElementsCollection openEventSchedule = $$x("//lime-carousel[2]//button[@class='p-ripple p-button p-component']");
     ElementsCollection eventsNamesInCards = $$x("//lime-carousel[2]//div[@class='name-string']");
     ElementsCollection eventsPricesInCards = $$x("//lime-carousel[2]//p[@class='lime-full-price']");
-    SelenideElement calendarButton = $x("//input[@class='p-inputtext p-component ng-tns-c2825477640-2 p-datepicker-input p-filled ng-star-inserted']");
     SelenideElement nowDate = $x("//span[@class='p-ripple ng-tns-c2825477640-2 p-datepicker-day p-datepicker-day-selected ng-star-inserted']");
     SelenideElement allEventsButton = $x("//lime-carousel[2]//button[@class='p-ripple p-button p-component p-button-rounded']");
-    SelenideElement datePickerInput = $x("//input[@class='p-inputtext p-component ng-tns-c2825477640-2 p-datepicker-input p-filled ng-star-inserted']");
+    SelenideElement datePickerInputButton = $x("//input[@class='p-inputtext p-component ng-tns-c2825477640-2 p-datepicker-input p-filled ng-star-inserted']");
     SelenideElement eventScheduleModal = $x("//div[@class='event-schedule']");
     ElementsCollection addEventInCartButton = $$x("//lime-event-price-item//img[@limeimg='plus-sign.svg']/parent::button");
     ElementsCollection availableSeatsInSchedule = $$x("//div[@class='event-time-space-info'][2]/div[1]");
@@ -37,6 +36,11 @@ public class Events {
     SelenideElement eventGroupButton = $x("//button[@class='event-group']");
     SelenideElement activeEventGroupButton = $x("//button[@class='event-group active']");
     SelenideElement enabledNavButtonInSwiper = $x("//lime-carousel[2]//span[@class='nav-button']");
+    ElementsCollection eventsInAll = $$x("//p-card");
+    SelenideElement homeBackButtonFromAllEvents = $x("//div[@class='home-back-button']/img");
+    SelenideElement logoInHeader = $x("//span[@class='logo']");
+    SelenideElement ticketsHeader = $x("//lime-carousel[1]//h2");
+    SelenideElement refillAccountHeader =$x("//h3");
 
     public int getCountOfEvents() {
         eventsCards.get(0).scrollIntoView(true);
@@ -55,7 +59,7 @@ public class Events {
     }
 
     public void checkElementsInEventSchedule(int eventIndex) {
-        String currentDateInDataPicker = datePickerInput.getValue();
+        String currentDateInDataPicker = datePickerInputButton.getValue();
 
         openEventSchedule.get(eventIndex).click();
         eventScheduleModal.shouldBe(Condition.visible);
@@ -141,7 +145,7 @@ public class Events {
     }
 
     public boolean checkDateInDatePickerInput() {
-        return datePickerInput.getValue()
+        return datePickerInputButton.getValue()
                 .equals(
                         LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM"))
                                 + " - "
@@ -160,7 +164,7 @@ public class Events {
         cart.shouldBe(Condition.visible);
     }
 
-    public boolean checkMinEventsTicketsPrices(int eventIndex) {
+    public boolean checkMinPricesEventsTicketsInCard(int eventIndex) {
         if (eventIndex > 2) {
             enabledNavButtonInSwiper.click();
         }
@@ -175,5 +179,28 @@ public class Events {
         eventsAndPrices.put(DataEvents.EVENT_4.getIndex(), DataEvents.EVENT_4.getChildOrFirstSeatTypePrice());
 
        return eventsAndPrices.get(eventIndex).toString().equals(element);
+    }
+
+    public boolean checkEventsAfterClickOnAll() {
+        allEventsButton.click();
+        eventsInAll.shouldHave(CollectionCondition.size(4));
+
+        return homeBackButtonFromAllEvents.exists() && !ticketsHeader.exists() && !refillAccountHeader.exists() && !allEventsButton.exists();
+    }
+
+    public boolean checkReturningToMainPageFromAllEventsAfterClickOnHomeBackButton() {
+        allEventsButton.click();
+        homeBackButtonFromAllEvents.click();
+        eventsInAll.shouldHave(CollectionCondition.size(8));
+
+        return !homeBackButtonFromAllEvents.exists() && ticketsHeader.exists() && refillAccountHeader.exists() && allEventsButton.isEnabled();
+    }
+
+    public boolean checkReturningToMainPageFromAllEventsAfterClickOnLogoInHeader() {
+        allEventsButton.click();
+        logoInHeader.click();
+        eventsInAll.shouldHave(CollectionCondition.size(8));
+
+        return !homeBackButtonFromAllEvents.exists() && ticketsHeader.exists() && refillAccountHeader.exists() && allEventsButton.isEnabled();
     }
 }
