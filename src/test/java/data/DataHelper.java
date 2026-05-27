@@ -22,8 +22,12 @@ public class DataHelper {
         return text.replace("\u00A0", " ");
     }
 
-    public static String getRandomSum() {
+    public static String getRandomSumBetween1And5999() {
         return String.valueOf(new Random().nextInt(6_000 - 1) + 1);
+    }
+
+    public static int getRandomInt(int min, int max) {
+        return new Random().nextInt((max - min) + 1) + min;
     }
 
     public static String calculateTicketsPrice(double... ticketsPrices) {

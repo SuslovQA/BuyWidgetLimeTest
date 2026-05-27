@@ -403,7 +403,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("3.1 Проверка интервала дат по умолчанию в календаре в компоненте 'События'")
     void shouldCheckDateInDatePicker() {
-        Assertions.assertTrue(mainPage.events.checkDateInDatePickerInput());
+        Assertions.assertTrue(mainPage.events.checkDefaultDateIntervalInDatePickerInput());
     }
 
     @Test
@@ -486,6 +486,25 @@ public class BuyWidgetTest {
     }
 
     @Test
+    @DisplayName("3.11 Проверка выбранной даты по умолчанию в календаре в компоненте 'События'")
+    void shouldCheckDefaultSelectedDateInDatePicker() {
+        Assertions.assertTrue(mainPage.events.checkDefaultSelectedDateInDatePicker());
+    }
+
+    @Test
+    @DisplayName("3.12 Проверка изменения даты при выборе одного дня в календаре")
+    void shouldCheckChangesInDatePickerWithOneDayOfPeriod() {
+        Assertions.assertTrue(mainPage.events.checkChangesInDatePickerWithOneDayOfPeriod());
+    }
+
+    @Test
+    @DisplayName("3.13 Проверка изменения даты при выборе одного дня в календаре с проверкой даты в добавленном билете")
+    void shouldCheckChangesInDatePickerWithOneDayOfPeriodWithCheckingDateInTicket() {
+        mainPage.auth.doubleAuthWithCardUid(VALID_CARD_UID.getUid());
+        Assertions.assertTrue(mainPage.events.checkEventDateInCartAfterSelectingDateInCalendar(EVENT_1.getIndex(), EVENT_1_TICKET.getIndex()));
+    }
+
+    @Test
     @DisplayName("4.0 Проверка добавления суммы в корзину по нажатию кнопки 'Выбора суммы'")
     void shouldCheckSumInCartAfterRefillFromSumButtons() {
         mainPage.auth.doubleAuthWithCardUid(VALID_CARD_UID.getUid());
@@ -513,7 +532,7 @@ public class BuyWidgetTest {
     @Test
     @DisplayName("4.2 Проверка добавления суммы в корзину при вводе в поле ввода суммы")
     void shouldCheckSumInCartRefillFromInputWithRandomSum() {
-        String userSum = DataHelper.getRandomSum();
+        String userSum = DataHelper.getRandomSumBetween1And5999();
 
         mainPage.auth.doubleAuthWithCardUid(VALID_CARD_UID.getUid());
         mainPage.refillAccount.addSumFromInput(userSum);

@@ -10,8 +10,10 @@ import data.DataHelper;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static com.codeborne.selenide.Selenide.*;
 
@@ -21,6 +23,10 @@ public class Events {
     ElementsCollection eventsNamesInCards = $$x("//lime-carousel[2]//div[@class='name-string']");
     ElementsCollection eventsPricesInCards = $$x("//lime-carousel[2]//p[@class='lime-full-price']");
     SelenideElement nowDate = $x("//span[@class='p-ripple ng-tns-c2825477640-2 p-datepicker-day p-datepicker-day-selected ng-star-inserted']");
+    ElementsCollection activeDateInDatePicker = $$x("//span[@class='p-ripple ng-tns-c2825477640-2 p-datepicker-day ng-star-inserted']");
+    ElementsCollection disabledDateInDatePicker = $$x("//span[@class='p-ripple ng-tns-c2825477640-2 p-datepicker-day p-disabled ng-star-inserted']");
+    ElementsCollection selectedRangeOfDateInDatePicker = $$x("//span[@class='p-ripple ng-tns-c2825477640-2 p-datepicker-day p-datepicker-day-selected-range ng-star-inserted']");
+    SelenideElement selectedDateInDatePicker = $x("//span[@class='p-ripple ng-tns-c2825477640-2 p-datepicker-day p-datepicker-day-selected ng-star-inserted']");
     SelenideElement allEventsButton = $x("//lime-carousel[2]//button[@class='p-ripple p-button p-component p-button-rounded']");
     SelenideElement datePickerInputButton = $x("//input[@class='p-inputtext p-component ng-tns-c2825477640-2 p-datepicker-input p-filled ng-star-inserted']");
     SelenideElement eventScheduleModal = $x("//div[@class='event-schedule']");
@@ -36,11 +42,15 @@ public class Events {
     SelenideElement eventGroupButton = $x("//button[@class='event-group']");
     SelenideElement activeEventGroupButton = $x("//button[@class='event-group active']");
     SelenideElement enabledNavButtonInSwiper = $x("//lime-carousel[2]//span[@class='nav-button']");
+    SelenideElement disabledNavButtonInSwiper = $x("//lime-carousel[2]//span[@class='nav-button disabled']");
     ElementsCollection eventsInAll = $$x("//p-card");
     SelenideElement homeBackButtonFromAllEvents = $x("//div[@class='home-back-button']/img");
     SelenideElement logoInHeader = $x("//span[@class='logo']");
     SelenideElement ticketsHeader = $x("//lime-carousel[1]//h2");
     SelenideElement refillAccountHeader =$x("//h3");
+    SelenideElement eventDateDay = $x("//span[@class='event-date-number']");
+    SelenideElement eventDateWeekday = $x("//span[@class='event-date-weekday']");
+    SelenideElement eventDateMonth = $x("//span[@class='event-date-Month']");
 
     public int getCountOfEvents() {
         eventsCards.get(0).scrollIntoView(true);
@@ -144,13 +154,62 @@ public class Events {
         return eventsNamesInCards.get(eventIndex).getText();
     }
 
-    public boolean checkDateInDatePickerInput() {
+    public boolean checkDefaultDateIntervalInDatePickerInput() {
         return datePickerInputButton.getValue()
                 .equals(
                         LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM"))
                                 + " - "
                                 + LocalDate.now().plusMonths(1).format(DateTimeFormatter.ofPattern("dd.MM"))
                 );
+    }
+
+    public boolean checkDefaultSelectedDateInDatePicker() {
+        datePickerInputButton.click();
+
+        int currentDayOfMonth = LocalDate.now().getDayOfMonth();
+        int selectedDayOfMonth = Integer.parseInt(nowDate.getText());
+
+        return selectedDayOfMonth == currentDayOfMonth;
+    }
+
+    public boolean checkChangesInDatePickerWithOneDayOfPeriod() {
+        datePickerInputButton.click();
+
+        int random = DataHelper.getRandomInt(1, selectedRangeOfDateInDatePicker.size() - 1);
+        String randomDayInSelectedRange = selectedRangeOfDateInDatePicker.get(random).getText();
+        selectedRangeOfDateInDatePicker.get(random).click();
+
+        String selectedDayInInput = datePickerInputButton.getValue();
+
+        String[] splittingSelectedDayInInput = selectedDayInInput.split("\\.");
+
+        selectedDateInDatePicker.shouldHave(Condition.exactText(splittingSelectedDayInInput[0]));
+
+        disabledNavButtonInSwiper.click();
+
+        String pickedDate = datePickerInputButton.getValue();
+        String currentDay = String.valueOf(LocalDate.now().plusDays(random + 1).getDayOfMonth());
+        String currentDate = LocalDate.now().plusDays(random + 1).format(DateTimeFormatter.ofPattern("dd.MM"));
+
+        return currentDay.equals(randomDayInSelectedRange) && currentDay.equals(selectedDateInDatePicker.getText()) && pickedDate.equals(currentDate);
+    }
+
+    public boolean checkEventDateInCartAfterSelectingDateInCalendar(int index, int ticketIndex) {
+        datePickerInputButton.click();
+
+        int random = DataHelper.getRandomInt(1, selectedRangeOfDateInDatePicker.size() - 1);
+        String randomDayInSelectedRange = selectedRangeOfDateInDatePicker.get(random).getText();
+        selectedRangeOfDateInDatePicker.get(random).click();
+
+        String selectedDayInInput = datePickerInputButton.getValue();
+
+        String[] splittingSelectedDayInInput = selectedDayInInput.split("\\.");
+
+        selectedDateInDatePicker.shouldHave(Condition.exactText(splittingSelectedDayInInput[0]));
+        selectedDateInDatePicker.click();
+
+        addEvent(index, ticketIndex);
+        return eventDateDay.has(Condition.exactText(selectedDayInInput)) && eventDateMonth.has(Condition.exactText(datePickerInputInSchedule.getText().split("\\.")[0]));
     }
 
     public String getEventNameInSchedule() {
@@ -203,4 +262,6 @@ public class Events {
 
         return !homeBackButtonFromAllEvents.exists() && ticketsHeader.exists() && refillAccountHeader.exists() && allEventsButton.isEnabled();
     }
+
+
 }

@@ -11,7 +11,7 @@ import java.util.Arrays;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Auth {
-    static SelenideElement authModalInput = $x("//input[@class='p-inputtext p-component auth-input']");
+    static SelenideElement authModalInput = $x("//input[@class='p-inputtext p-component auth-input ym-record-keys']");
     static SelenideElement authModalConfirmButton = $x("//div[@class='confirm-button-container']//button");
     SelenideElement imgInAuthIconContainer = $x("//div[@class='icon-container']/img");
     SelenideElement authButton = $x("//p-button//button[@class='p-ripple p-button p-component p-button-outlined p-button-lg']");
@@ -131,7 +131,7 @@ public class Auth {
 
             String result = splitWords[2];
 
-            if (splitWords[2].equals("1") || splitWords[2].equals("2") || splitWords[2].equals("3")) {
+            if (splitWords[2].equals("1") || splitWords[2].equals("2") || splitWords[2].equals("3") || splitWords[2].equals("4") || splitWords[2].equals("5")) {
                 result = splitWords[2] + splitWords[3];
             }
 
@@ -151,7 +151,7 @@ public class Auth {
         result = splitWords[2];
 
 
-        if (splitWords[2].equals("1") || splitWords[2].equals("2") || splitWords[2].equals("3")) {
+        if (splitWords[2].equals("1") || splitWords[2].equals("2") || splitWords[2].equals("3")  || splitWords[2].equals("4")  || splitWords[2].equals("5")) {
             result = splitWords[2] + splitWords[3];
         }
 

@@ -75,14 +75,14 @@ public class RefillAccount {
         result = splitCurrentBalance[0];
 
         if (splitCurrentBalance.length > 2) {
-            if (splitCurrentBalance[2].equals("1") || splitCurrentBalance[2].equals("2") || splitCurrentBalance[2].equals("3")) {
+            if (splitCurrentBalance[2].equals("1") || splitCurrentBalance[2].equals("2") || splitCurrentBalance[2].equals("3") || splitCurrentBalance[2].equals("4") || splitCurrentBalance[2].equals("5")) {
                 result = splitCurrentBalance[2] + splitCurrentBalance[3];
             }
         }
 
-        int result1 = Integer.parseInt(result) + Integer.parseInt(splitAddedSum[0]);
+        int totalResult = Integer.parseInt(result) + Integer.parseInt(splitAddedSum[0]);
 
-        return String.valueOf(result1);
+        return String.valueOf(totalResult);
     }
 
     public boolean checkBonusAmountInSumButtons(DataCards card) {

@@ -24,7 +24,7 @@ public class OrderPayment {
     SelenideElement downloadTicketsButton = $x("//button[@class='download-ticket ng-star-inserted']");
     SelenideElement downloadTicketsImg = $x("//button[@class='download-ticket ng-star-inserted']/img");
     SelenideElement closeStatusPaymentModalButton = $x("//button[@class='close-button ng-star-inserted']");
-    SelenideElement inputAuthValue = $x("//input[@class='p-inputtext p-component auth-input p-filled']");
+    SelenideElement inputAuthValue = $x("//input[@class='p-inputtext p-component auth-input ym-record-keys p-filled']");
 
     public void clickCheckboxAgreements() {
         checkboxAgreements.click();
