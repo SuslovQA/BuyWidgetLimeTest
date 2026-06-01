@@ -133,4 +133,56 @@ public class DataHelper {
                 .collect(Collectors.toList());
         return elements;
     }
+
+    public static String removeLeadingZero(String s) {
+        if (s.length() > 1 && s.startsWith("0")) {
+            s = s.substring(1);
+        }
+        return s;
+    }
+
+    public static String changeMonthFormat(String s) {
+        switch (s) {
+            case "01":
+                   s = "Января";
+                break;
+            case "02":
+                   s = "Февраля";
+                break;
+            case "03":
+                    s ="Марта";
+                break;
+            case "04":
+                    s = "Апреля";
+                break;
+            case "05":
+                    s = "Мая";
+                break;
+            case "06":
+                    s = "Июня";
+                break;
+            case "07":
+                    s = "Июля";
+                break;
+            case "08":
+                    s = "Августа";
+                break;
+            case "09":
+                    s = "Сентября";
+                break;
+            case "10":
+                    s = "Октября";
+                break;
+            case "11":
+                    s = "Ноября";
+                break;
+            case "12":
+                    s = "Декабря";
+                break;
+            default:
+                System.out.println("Месяц не определен");
+                break;
+        }
+        return s;
+    }
 }

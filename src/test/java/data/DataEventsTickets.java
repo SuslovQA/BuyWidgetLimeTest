@@ -1,9 +1,7 @@
 package data;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static data.DataEvents.EVENT_1;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataEventsTickets extends BaseTicket {
 //    private String secondName;
@@ -16,15 +14,15 @@ public class DataEventsTickets extends BaseTicket {
 //    public static DataEventsTickets EVENT_1_TICKET_14_17 = new DataEventsTickets("Взрослые для витрины", 100, "14:00 - 17:00");
 //    public static DataEventsTickets EVENT_1_TICKET_17_20 = new DataEventsTickets("Взрослые для витрины", 100, "17:00 - 20:00");
 
-    public static DataEventsTickets EVENT_2_TICKET_CHILD = new DataEventsTickets("Детские",  400);
-    public static DataEventsTickets EVENT_2_TICKET_ADULT = new DataEventsTickets("Взрослые для витрины",500);
+    public static DataEventsTickets EVENT_2_TICKET_CHILD = new DataEventsTickets("Детские", 400);
+    public static DataEventsTickets EVENT_2_TICKET_ADULT = new DataEventsTickets("Взрослые для витрины", 500);
 //    public static DataEventsTickets EVENT_2_TICKET_17_20 = new DataEventsTickets("Детские", "Взрослые для витрины", 400, 500, "17:00 - 20:00");
 
     public static DataEventsTickets EVENT_3_TICKET = new DataEventsTickets("Стандарт", 350);
 //    public static DataEventsTickets EVENT_3_TICKET_10_12 = new DataEventsTickets("Стандарт", 350, "10:00 - 12:00");
 //    public static DataEventsTickets EVENT_3_TICKET_12_14 = new DataEventsTickets("Стандарт", 350, "12:00 - 14:00");
 
-    public static DataEventsTickets EVENT_4_TICKET_TYPE_1 = new DataEventsTickets("Тип 1 для группы",150);
+    public static DataEventsTickets EVENT_4_TICKET_TYPE1 = new DataEventsTickets("Тип 1 для группы", 150);
     public static DataEventsTickets EVENT_4_TICKET_TYPE2 = new DataEventsTickets("Тип 2 для группы", 250);
 //    public static DataEventsTickets EVENT_4_TICKET_12_14 = new DataEventsTickets("Тип 1 для группы", "Тип 2 для группы",150, 250,"12:00 - 14:00");
 //    public static DataEventsTickets EVENT_4_TICKET_14_16 = new DataEventsTickets("Тип 1 для группы","Тип 2 для группы",150, 250,"14:00 - 16:00");
@@ -33,6 +31,27 @@ public class DataEventsTickets extends BaseTicket {
 
     public DataEventsTickets(String name, double price) {
         super(name, price);
+    }
+
+    public static List<DataEventsTickets> getTicketsFromEvents(int eventIndex) {
+        List<DataEventsTickets> listOfTickets = new ArrayList<>();
+        switch (eventIndex) {
+            case 0:
+                listOfTickets.add(EVENT_1_TICKET);
+                break;
+            case 1:
+                listOfTickets.add(EVENT_2_TICKET_ADULT);
+                listOfTickets.add(EVENT_2_TICKET_CHILD);
+                break;
+            case 2:
+                listOfTickets.add(EVENT_3_TICKET);
+                break;
+            case 3:
+                listOfTickets.add(EVENT_4_TICKET_TYPE1);
+                listOfTickets.add(EVENT_4_TICKET_TYPE2);
+                break;
+        }
+        return listOfTickets;
     }
 
 //    public DataEventsTickets(String name, String secondName, double childOrFirstSeatTypePrice, double adultOrSecondSeatTypePrice) {

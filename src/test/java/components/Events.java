@@ -10,10 +10,7 @@ import data.DataHelper;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static com.codeborne.selenide.Selenide.*;
 
@@ -48,9 +45,13 @@ public class Events {
     SelenideElement logoInHeader = $x("//span[@class='logo']");
     SelenideElement ticketsHeader = $x("//lime-carousel[1]//h2");
     SelenideElement refillAccountHeader =$x("//h3");
+    ElementsCollection eventTime = $$x("//div[@class='event-time']/div[@class='event-time-space-info'][1]");
     SelenideElement eventDateDay = $x("//span[@class='event-date-number']");
     SelenideElement eventDateWeekday = $x("//span[@class='event-date-weekday']");
-    SelenideElement eventDateMonth = $x("//span[@class='event-date-Month']");
+    SelenideElement eventDateMonth = $x("//span[@class='event-date-month']");
+    SelenideElement seatTypeGroupInCart = $x("//div[@class='event-data ng-star-inserted']/div[1]");
+    SelenideElement dateEventInCart = $x("//div[@class='event-data ng-star-inserted']/div[2]");
+    SelenideElement timeEventInCart = $x("//div[@class='event-data ng-star-inserted']/div[3]");
 
     public int getCountOfEvents() {
         eventsCards.get(0).scrollIntoView(true);
@@ -81,7 +82,9 @@ public class Events {
     }
 
     public Events addEvent(int eventIndex, int ticketIndex) {
-        openEventSchedule.get(eventIndex).click();
+        if (!eventScheduleModal.exists()) {
+            openEventSchedule.get(eventIndex).click();
+        }
 
         if (Auth.authModalConfirmButton.exists()) {
             Auth.authModalConfirmButton.click();
@@ -194,22 +197,38 @@ public class Events {
         return currentDay.equals(randomDayInSelectedRange) && currentDay.equals(selectedDateInDatePicker.getText()) && pickedDate.equals(currentDate);
     }
 
-    public boolean checkEventDateInCartAfterSelectingDateInCalendar(int index, int ticketIndex) {
+    public boolean checkEventDateInCartAfterSelectingDateInCalendar(int eventIndex, int ticketIndex) {
         datePickerInputButton.click();
+        System.out.println(selectedRangeOfDateInDatePicker.size());
 
         int random = DataHelper.getRandomInt(1, selectedRangeOfDateInDatePicker.size() - 1);
-        String randomDayInSelectedRange = selectedRangeOfDateInDatePicker.get(random).getText();
         selectedRangeOfDateInDatePicker.get(random).click();
 
-        String selectedDayInInput = datePickerInputButton.getValue();
+        String selectedDate = datePickerInputButton.getValue();
 
-        String[] splittingSelectedDayInInput = selectedDayInInput.split("\\.");
+        String[] splittingSelectedDay = selectedDate.split("\\.");
+        String selectedDayWithoutLeadZero = DataHelper.removeLeadingZero(splittingSelectedDay[0]);
 
-        selectedDateInDatePicker.shouldHave(Condition.exactText(splittingSelectedDayInInput[0]));
+        selectedDateInDatePicker.shouldHave(Condition.exactText(selectedDayWithoutLeadZero));
         selectedDateInDatePicker.click();
+        openEventSchedule.get(eventIndex).scrollIntoView(false).click();
 
-        addEvent(index, ticketIndex);
-        return eventDateDay.has(Condition.exactText(selectedDayInInput)) && eventDateMonth.has(Condition.exactText(datePickerInputInSchedule.getText().split("\\.")[0]));
+        eventDateDay.shouldHave(Condition.exactText(selectedDayWithoutLeadZero));
+        eventDateMonth.shouldHave(Condition.exactText(DataHelper.changeMonthFormat(splittingSelectedDay[1].trim())));
+
+        addEvent(eventIndex, ticketIndex);
+        closeScheduleButton.click();
+
+        String seatTypeGroupNameInCart = DataEventsTickets.getTicketsFromEvents(eventIndex).get(ticketIndex).getName();
+        String dateString = dateEventInCart.getText();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate date = LocalDate.parse(dateString, formatter);
+        System.out.println(eventTime.get(ticketIndex).getText());
+        System.out.println(timeEventInCart.getText());
+
+        return seatTypeGroupInCart.has(Condition.exactText(seatTypeGroupNameInCart))
+                && dateEventInCart.has(Condition.exactText(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))))
+                && eventTime.get(ticketIndex).has(Condition.exactText(timeEventInCart.getText()));
     }
 
     public String getEventNameInSchedule() {
@@ -227,6 +246,7 @@ public class Events {
         if (eventIndex > 2) {
             enabledNavButtonInSwiper.click();
         }
+
         String[] splittedElements = eventsPricesInCards.get(eventIndex).getText().split(" ");
         String element = splittedElements[1] + ".0";
 

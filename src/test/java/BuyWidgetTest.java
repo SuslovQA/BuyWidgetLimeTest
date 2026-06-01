@@ -12,6 +12,7 @@ import static data.DataCards.*;
 import static data.DataEvents.*;
 import static data.DataEventsTickets.*;
 import static data.DataTickets.*;
+import static io.restassured.RestAssured.given;
 
 public class BuyWidgetTest {
     MainPage mainPage;
@@ -22,7 +23,7 @@ public class BuyWidgetTest {
 
         Configuration.browser = "chrome";
         Configuration.browserSize = "1920x1080";
-        Configuration.headless = true;
+        Configuration.headless = false;
         Configuration.pageLoadTimeout = 30_000;
         Configuration.pageLoadStrategy = "eager";
 
@@ -583,4 +584,22 @@ public class BuyWidgetTest {
 
         Assertions.assertTrue(mainPage.cart.checkApplyingTenPercentDiscount());
     }
+
+//    @Test
+//    void api() {
+//        for (int i = 0; i < 109; i++) {
+//            given()
+//                    .header("Authorization", "LimeToken 16be3b3a-f1a5-43d9-9264-47e2103782cf")
+//                    .param("servicePointId", 263090)
+//                    .param("serviceId", 200701)
+//                    .param("direction", 0)
+//                    .param("code", "CAD168AD")
+//                    .param("passTime", "06/01/2026 10:55:31 +05:00")
+//                    .param("cardType", -1)
+//                    .param("validation", "0")
+//                    .when()
+//                    .get("https://limepay.chudin.ru/api/MobileServicePoint/ValidatePass")
+//                    .then().statusCode(200);
+//        }
+//    }
 }
